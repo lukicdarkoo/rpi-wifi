@@ -148,9 +148,8 @@ iface ap0 inet static
     hostapd /etc/hostapd/hostapd.conf
 
 allow-hotplug wlan0
-iface wlan0 inet manual
+iface wlan0 inet dhcp
     wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
-iface AP1 inet dhcp
 EOF
 
 # Populate `/bin/start_wifi.sh`
