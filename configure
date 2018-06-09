@@ -23,6 +23,7 @@ EOF
     exit 0
 }
 
+POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -55,8 +56,13 @@ case $key in
     NO_INTERNET="true"
     shift
     ;;
+    *)
+    POSITIONAL+=("$1")
+    shift
+    ;;
 esac
 done
+set -- "${POSITIONAL[@]}"
 
 [ $ARG_AP_SSID ] || usage
 
