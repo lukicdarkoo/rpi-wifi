@@ -10,7 +10,7 @@ usage() {
 Configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 
 USAGE:
-    rpi-ap <ap_ssid> <client_ssid> <client_password> -p <ap_password>
+    rpi-ap -a <ap_ssid> <ap_password> -c <client_password> [<client_password>]
 
 PARAMETERS:
     -p, --password      AP password
@@ -23,14 +23,22 @@ EOF
     exit 0
 }
 
-POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
 key="$1"
 
 case $key in
-    -p|--password)
-    ARG_AP_PASSWORD="$2"
+    -c|--client)
+    CLIENT_SSID="$2"
+    CLIENT_PASSPHRASE="$3"
+    shift
+    shift
+    shift
+    ;;
+    -a|--ap)
+    AP_SSID="$2"
+    AP_PASSPHRASE="$3"
+    shift
     shift
     shift
     ;;
@@ -42,27 +50,18 @@ case $key in
     -h|--help)
     usage
     shift
+	;;
     -n|--no-internet)
     NO_INTERNET="true"
     shift
     ;;
-    *)
-    POSITIONAL+=("$1")
-    shift
-    ;;
 esac
 done
-set -- "${POSITIONAL[@]}"
 
-CLIENT_SSID="${POSITIONAL[1]}"
-CLIENT_PASSPHRASE=`[ "${#POSITIONAL[@]}" -eq "2" ] && echo '' || echo ${POSITIONAL[2]}`
-AP_SSID="${POSITIONAL[0]}"
-AP_PASSPHRASE=$ARG_AP_PASSWORD
+[ $ARG_AP_SSID ] || usage
+
 AP_IP=${ARG_AP_IP:-'192.168.10.1'}
 AP_IP_BEGIN=`echo "${AP_IP}" | sed -e 's/\.[1-9]\{1,3\}$//g'`
-
-[ "${#POSITIONAL[@]}" -lt "2" ] && usage
-
 
 # Install dependencies
 sudo apt -y update
@@ -112,6 +111,7 @@ DAEMON_CONF="/etc/hostapd/hostapd.conf"
 EOF
 
 # Populate `/etc/wpa_supplicant/wpa_supplicant.conf`
+if [ $CLIENT_SSID ]; then
 sudo bash -c 'cat > /etc/wpa_supplicant/wpa_supplicant.conf' << EOF
 country=US
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -123,6 +123,7 @@ network={
     id_str="AP1"
 }
 EOF
+fi
 
 # Populate `/etc/network/interfaces`
 sudo bash -c 'cat > /etc/network/interfaces' << EOF
