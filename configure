@@ -68,6 +68,7 @@ set -- "${POSITIONAL[@]}"
 
 AP_IP=${ARG_AP_IP:-'192.168.10.1'}
 AP_IP_BEGIN=`echo "${AP_IP}" | sed -e 's/\.[1-9]\{1,3\}$//g'`
+MAC_ADDRESS="$(cat /sys/class/net/wlan0/address)"
 
 # Install dependencies
 sudo apt -y update
