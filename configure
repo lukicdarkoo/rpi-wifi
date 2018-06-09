@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # The script configures simultaneous AP and Managed Mode Wifi on Raspberry Pi Zero W (should also work on Raspberry Pi 3)
 # Licence: GPLv3
 # Author: Darko Lukic <lukicdarkoo@gmail.com>
@@ -164,7 +164,7 @@ sudo sysctl -w net.ipv4.ip_forward=1
 sudo iptables -t nat -A POSTROUTING -s ${AP_IP_BEGIN}.0/24 ! -d ${AP_IP_BEGIN}.0/24 -j MASQUERADE
 sudo systemctl restart dnsmasq
 EOF
-sudo chmod +x /bin/start_wifi.sh
+sudo chmod +x /bin/rpi-wifi.sh
 
 # Configure cron job
 sudo bash -c 'cat > /etc/systemd/system/rpi-wifi.service' << EOF
