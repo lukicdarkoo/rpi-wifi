@@ -1,5 +1,8 @@
 # Simultaneous AP and Managed Mode Wifi on Raspberry Pi
 
+Special thanks to:
+https://albeec13.github.io/2017/09/26/raspberry-pi-zero-w-simultaneous-ap-and-managed-mode-wifi/
+
 ```
 Configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 

@@ -119,7 +119,7 @@ update_config=1
 
 network={
     ssid="${CLIENT_SSID}"
-    $([ $CLIENT_PASSPHRASE ] && echo "psk=\"${CLIENT_PASSPHRASE}\""
+    $([ $CLIENT_PASSPHRASE ] && echo "psk=\"${CLIENT_PASSPHRASE}\"")
     id_str="AP1"
 }
 EOF
