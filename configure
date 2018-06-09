@@ -175,11 +175,12 @@ Requires=network.target
 After=network.target
 
 [Service]
-ExecStart=/bin/rpi-wifi.sh
+ExecStart=/bin/bash -c 'rpi-wifi.sh'
 
 [Install]
 WantedBy=multi-user.target
 EOF
+sudo systemctl daemon-reload
 sudo systemctl enable rpi-wifi.service
 # crontab -l | { cat; echo "@reboot /bin/start_wifi.sh"; } | crontab -
 
