@@ -168,22 +168,22 @@ EOF
 sudo chmod +x /bin/rpi-wifi.sh
 
 # Configure cron job
-sudo bash -c 'cat > /etc/systemd/system/rpi-wifi.service' << EOF
-[Unit]
-Description=Simultaneous AP and Managed Mode Wifi on Raspberry Pi
-Requires=network.target
-After=network.target
-
-[Service]
-ExecStart=/bin/bash -c 'rpi-wifi.sh'
-User=root
-
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo systemctl daemon-reload
-sudo systemctl enable rpi-wifi.service
-# crontab -l | { cat; echo "@reboot /bin/start_wifi.sh"; } | crontab -
+# sudo bash -c 'cat > /etc/systemd/system/rpi-wifi.service' << EOF
+# [Unit]
+# Description=Simultaneous AP and Managed Mode Wifi on Raspberry Pi
+# Requires=network.target
+# After=network.target
+#
+# [Service]
+# ExecStart=/bin/bash -c 'rpi-wifi.sh'
+# User=root
+#
+# [Install]
+# WantedBy=multi-user.target
+# EOF
+# sudo systemctl daemon-reload
+# sudo systemctl enable rpi-wifi.service
+crontab -l | { cat; echo "@reboot /bin/start_wifi.sh"; } | crontab -
 
 # Finish
 echo "Wifi configuration is finished! Please reboot your Raspberry Pi to apply changes..."
