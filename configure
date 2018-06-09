@@ -105,7 +105,7 @@ wmm_enabled=0
 macaddr_acl=0
 auth_algs=1
 wpa=2PASSPHRASE
-$([ $AP_PASSPHRASE ] && echo "wpa_passphrase=\"${AP_PASSPHRASE}\""
+$([ $AP_PASSPHRASE ] && echo "wpa_passphrase=\"${AP_PASSPHRASE}\"")
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP CCMP
 rsn_pairwise=CCMP
@@ -175,6 +175,9 @@ After=network.target
 
 [Service]
 ExecStart=/bin/rpi-wifi.sh
+
+[Install]
+WantedBy=multi-user.target
 EOF
 sudo systemctl enable rpi-wifi.service
 # crontab -l | { cat; echo "@reboot /bin/start_wifi.sh"; } | crontab -
