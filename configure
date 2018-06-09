@@ -147,7 +147,7 @@ iface AP1 inet dhcp
 EOF
 
 # Populate `/bin/start_wifi.sh`
-sudo bash -c 'cat > /bin/start_wifi.sh' << EOF
+sudo bash -c 'cat > /bin/rpi-wifi.sh' << EOF
 echo 'Starting Wifi AP and client...'
 sleep 30
 sudo ifdown --force wlan0
@@ -159,5 +159,19 @@ sudo iptables -t nat -A POSTROUTING -s ${AP_IP_BEGIN}.0/24 ! -d ${AP_IP_BEGIN}.0
 sudo systemctl restart dnsmasq
 EOF
 sudo chmod +x /bin/start_wifi.sh
-crontab -l | { cat; echo "@reboot /bin/start_wifi.sh"; } | crontab -
+
+# Configure cron job
+sudo bash -c 'cat > /etc/systemd/system/rpi-wifi.service' << EOF
+[Unit]
+Description=Simultaneous AP and Managed Mode Wifi on Raspberry Pi
+Requires=network.target
+After=network.target
+
+[Service]
+ExecStart=/bin/rpi-wifi.sh
+EOF
+sudo systemctl enable rpi-wifi.service
+# crontab -l | { cat; echo "@reboot /bin/start_wifi.sh"; } | crontab -
+
+# Finish
 echo "Wifi configuration is finished! Please reboot your Raspberry Pi to apply changes..."
