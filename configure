@@ -64,7 +64,7 @@ esac
 done
 set -- "${POSITIONAL[@]}"
 
-[ $ARG_AP_SSID ] || usage
+[ $AP_SSID ] || usage
 
 AP_IP=${ARG_AP_IP:-'192.168.10.1'}
 AP_IP_BEGIN=`echo "${AP_IP}" | sed -e 's/\.[1-9]\{1,3\}$//g'`
