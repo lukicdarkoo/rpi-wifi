@@ -118,7 +118,6 @@ DAEMON_CONF="/etc/hostapd/hostapd.conf"
 EOF
 
 # Populate `/etc/wpa_supplicant/wpa_supplicant.conf`
-if [ $CLIENT_SSID ]; then
 sudo bash -c 'cat > /etc/wpa_supplicant/wpa_supplicant.conf' << EOF
 country=US
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -130,7 +129,6 @@ network={
     id_str="AP1"
 }
 EOF
-fi
 
 # Populate `/etc/network/interfaces`
 sudo bash -c 'cat > /etc/network/interfaces' << EOF
@@ -148,8 +146,9 @@ iface ap0 inet static
     hostapd /etc/hostapd/hostapd.conf
 
 allow-hotplug wlan0
-iface wlan0 inet dhcp
+iface wlan0 inet manual
     wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+iface AP1 inet dhcp
 EOF
 
 # Populate `/bin/start_wifi.sh`
