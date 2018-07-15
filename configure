@@ -10,10 +10,13 @@ usage() {
 Configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 
 USAGE:
-    rpi-ap -a <ap_ssid> <ap_password> -c <client_password> [<client_password>]
+    rpi-wifi -a <ap_ssid> [<ap_password>] -c <client_password> [<client_password>]
+    
+    rpi-wifi -a MyAP myappass -c MyWifiSSID mywifipass
 
 PARAMETERS:
-    -p, --password      AP password
+    -a, --ap      	AP SSID & password
+    -c, --client	Client SSID & password
     -i, --ip            AP IP
 
 FLAGS:
