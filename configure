@@ -4,6 +4,10 @@
 # Author: Darko Lukic <lukicdarkoo@gmail.com>
 # Special thanks to: https://albeec13.github.io/2017/09/26/raspberry-pi-zero-w-simultaneous-ap-and-managed-mode-wifi/
 
+# Error management
+set -o errexit
+set -o pipefail
+set -o nounset
 
 usage() {
     cat 1>&2 <<EOF
@@ -76,7 +80,7 @@ MAC_ADDRESS="$(cat /sys/class/net/wlan0/address)"
 # Install dependencies
 sudo apt -y update
 sudo apt -y upgrade
-sudo apt -y install dnsmasq dhcpcd hostapd
+sudo apt -y install dnsmasq dhcpcd hostapd cron
 
 # Populate `/etc/udev/rules.d/70-persistent-net.rules`
 sudo bash -c 'cat > /etc/udev/rules.d/70-persistent-net.rules' << EOF
