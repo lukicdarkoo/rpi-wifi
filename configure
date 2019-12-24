@@ -193,5 +193,10 @@ if crontab -l | grep -c "@reboot /bin/rpi-wifi.sh" -ne 1; then
     crontab -l | { cat; echo "@reboot /bin/rpi-wifi.sh"; } | crontab -
 fi
 
+# unmask and enable dnsmasq.service / hostapd.service / dhcpcd.service
+sudo systemctl unmask dnsmasq.service hostapd.service dhcpcd.service
+sudo systemctl enable dnsmasq.service hostapd.service dhcpcd.service
+sudo systemctl daemon-reload
+
 # Finish
 echo "Wifi configuration is finished! Please reboot your Raspberry Pi to apply changes..."
