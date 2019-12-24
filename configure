@@ -35,7 +35,7 @@ welcome
 
 logger(){
     echo -e "${GREEN}\n"
-    echo -e "${1}"
+    echo "${1}"
 }
 
 usage() {
@@ -119,7 +119,7 @@ sudo apt -y upgrade
 sudo apt -y install dnsmasq dhcpcd hostapd cron
 
 # Populate `/etc/udev/rules.d/70-persistent-net.rules`
-logger "Populate `/etc/udev/rules.d/70-persistent-net.rules`"
+logger "Populate /etc/udev/rules.d/70-persistent-net.rules"
 sudo bash -c 'cat > /etc/udev/rules.d/70-persistent-net.rules' << EOF
 SUBSYSTEM=="ieee80211", ACTION=="add|change", ATTR{macaddress}=="${MAC_ADDRESS}", KERNEL=="phy0", \
   RUN+="/sbin/iw phy phy0 interface add ap0 type __ap", \
@@ -127,7 +127,7 @@ SUBSYSTEM=="ieee80211", ACTION=="add|change", ATTR{macaddress}=="${MAC_ADDRESS}"
 EOF
 
 # Populate `/etc/dnsmasq.conf`
-logger "Populate `/etc/dnsmasq.conf`"
+logger "Populate /etc/dnsmasq.conf"
 sudo bash -c 'cat > /etc/dnsmasq.conf' << EOF
 interface=lo,ap0
 no-dhcp-interface=lo,wlan0
@@ -139,7 +139,7 @@ dhcp-range=${AP_IP_BEGIN}.50,${AP_IP_BEGIN}.150,12h
 EOF
 
 # Populate `/etc/hostapd/hostapd.conf`
-logger "Populate `/etc/hostapd/hostapd.conf`"
+logger "Populate /etc/hostapd/hostapd.conf"
 sudo bash -c 'cat > /etc/hostapd/hostapd.conf' << EOF
 ctrl_interface=/var/run/hostapd
 ctrl_interface_group=0
@@ -159,13 +159,13 @@ rsn_pairwise=CCMP
 EOF
 
 # Populate `/etc/default/hostapd`
-logger "Populate `/etc/default/hostapd`"
+logger "Populate /etc/default/hostapd"
 sudo bash -c 'cat > /etc/default/hostapd' << EOF
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
 EOF
 
 # Populate `/etc/wpa_supplicant/wpa_supplicant.conf`
-logger "Populate `/etc/wpa_supplicant/wpa_supplicant.conf`"
+logger "Populate /etc/wpa_supplicant/wpa_supplicant.conf"
 sudo bash -c 'cat > /etc/wpa_supplicant/wpa_supplicant.conf' << EOF
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
@@ -178,7 +178,7 @@ network={
 EOF
 
 # Populate `/etc/network/interfaces`
-logger "Populate `/etc/network/interfaces`"
+logger "Populate /etc/network/interfaces"
 sudo bash -c 'cat > /etc/network/interfaces' << EOF
 source-directory /etc/network/interfaces.d
 
@@ -200,7 +200,7 @@ iface AP1 inet dhcp
 EOF
 
 # Populate `/bin/start_wifi.sh`
-logger "Populate `/bin/start_wifi.sh`"
+logger "Populate /bin/start_wifi.sh"
 sudo bash -c 'cat > /bin/rpi-wifi.sh' << EOF
 echo 'Starting Wifi AP and client...'
 sleep 30
