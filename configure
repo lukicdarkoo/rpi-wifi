@@ -14,14 +14,15 @@ usage() {
 Configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 
 USAGE:
-    rpi-wifi -a <ap_ssid> [<ap_password>] -c <client_password> [<client_password>]
+    rpi-wifi --ap <ap_ssid> [<ap_password>] --client <client_password> [<client_password>] --country <iso_3166_country_code>
     
-    rpi-wifi -a MyAP myappass -c MyWifiSSID mywifipass
+    rpi-wifi --ap MyAP myappass --client MyWifiSSID mywifipass --country FR
 
 PARAMETERS:
-    -a, --ap      	AP SSID & password
-    -c, --client	Client SSID & password
+    -a, --ap      	    AP SSID & password
+    -c, --client	    Client SSID & password
     -i, --ip            AP IP
+    -cy, --country      ISO3166 Country Code
 
 FLAGS:
     -n, --no-internet   Disable IP forwarding
@@ -47,6 +48,11 @@ case $key in
     AP_SSID="$2"
     AP_PASSPHRASE="$3"
     shift
+    shift
+    shift
+    ;;
+    -cy|--country)
+    COUNTRY_CODE="$2"
     shift
     shift
     ;;
@@ -126,10 +132,9 @@ EOF
 
 # Populate `/etc/wpa_supplicant/wpa_supplicant.conf`
 sudo bash -c 'cat > /etc/wpa_supplicant/wpa_supplicant.conf' << EOF
-country=US
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
-
+country=${COUNTRY_CODE}
 network={
     ssid="${CLIENT_SSID}"
     $([ $CLIENT_PASSPHRASE ] && echo "psk=\"${CLIENT_PASSPHRASE}\"")
