@@ -1,8 +1,13 @@
 #!/bin/bash
-# The script configures simultaneous AP and Managed Mode Wifi on Raspberry Pi Zero W (should also work on Raspberry Pi 3)
+# The script configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
+# Distribution Raspbian Buster
+# works on:
+#           -Raspberry Pi Zero W 
+#           -Raspberry Pi 3 B+
+#           -Raspberry Pi 3 A+
 # Licence: GPLv3
-# Author: Darko Lukic <lukicdarkoo@gmail.com>
-# Special thanks to: https://albeec13.github.io/2017/09/26/raspberry-pi-zero-w-simultaneous-ap-and-managed-mode-wifi/
+# Author: Mickael Lehoux <mickael.lehoux@gmail.com>
+# Special thanks to: https://github.com/lukicdarkoo/rpi-wifi
 
 # Error management
 set -o errexit
