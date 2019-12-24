@@ -188,7 +188,10 @@ sudo chmod +x /bin/rpi-wifi.sh
 # EOF
 # sudo systemctl daemon-reload
 # sudo systemctl enable rpi-wifi.service
-crontab -l | { cat; echo "@reboot /bin/rpi-wifi.sh"; } | crontab -
+
+if crontab -l | grep -c "@reboot /bin/rpi-wifi.sh" -ne 1; then
+    crontab -l | { cat; echo "@reboot /bin/rpi-wifi.sh"; } | crontab -
+fi
 
 # Finish
 echo "Wifi configuration is finished! Please reboot your Raspberry Pi to apply changes..."
