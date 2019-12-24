@@ -187,9 +187,9 @@ if crontab -l | grep -c "@reboot && sleep 10 /bin/rpi-wifi.sh" -ne 1; then
     crontab -l | { cat; echo "@reboot && sleep 10 /bin/rpi-wifi.sh"; } | crontab -
 fi
 
-# unmask and enable dnsmasq.service / hostapd.service / dhcpcd.service
-sudo systemctl unmask dnsmasq.service hostapd.service #dhcpcd.service
-sudo systemctl enable dnsmasq.service hostapd.service #dhcpcd.service
+# unmask and enable dnsmasq.service / hostapd.service
+sudo systemctl unmask dnsmasq.service hostapd.service
+sudo systemctl enable dnsmasq.service hostapd.service
 sudo systemctl daemon-reload
 
 # Finish
