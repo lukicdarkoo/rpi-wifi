@@ -212,7 +212,6 @@ sudo ifup wlan0
 $([ "${NO_INTERNET-}" != "true" ] && echo "sudo sysctl -w net.ipv4.ip_forward=1")
 $([ "${NO_INTERNET-}" != "true" ] && echo "sudo iptables -t nat -A POSTROUTING -s ${AP_IP_BEGIN}.0/24 ! -d ${AP_IP_BEGIN}.0/24 -j MASQUERADE")
 $([ "${NO_INTERNET-}" != "true" ] && echo "sudo systemctl restart dnsmasq")
-exit 0
 EOF
 sudo chmod +x /bin/rpi-wifi.sh
 
