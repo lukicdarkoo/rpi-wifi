@@ -54,7 +54,7 @@ PARAMETERS:
     -cy, --country      ISO3166 Country Code
 
 FLAGS:
-    -n, --no-internet   Disable IP forwarding
+    -n, --no-internet   Disable IP forwarding (by default is true)
     -h, --help          Show this help
 EOF
     exit 0
@@ -81,7 +81,7 @@ case $key in
     shift
     ;;
     -cy|--country)
-    COUNTRY_CODE="$2"
+    ARG_COUNTRY_CODE="$2"
     shift
     shift
     ;;
@@ -108,6 +108,7 @@ set -- "${POSITIONAL[@]}"
 
 [ $AP_SSID ] || usage
 
+COUNTRY_CODE=${ARG_COUNTRY_CODE:-'FR'}
 AP_IP=${ARG_AP_IP:-'192.168.4.1'}
 AP_IP_BEGIN=`echo "${AP_IP}" | sed -e 's/\.[0-9]\{1,3\}$//g'`
 MAC_ADDRESS="$(cat /sys/class/net/wlan0/address)"
@@ -228,6 +229,7 @@ sudo systemctl enable dnsmasq.service hostapd.service
 sudo systemctl daemon-reload
 
 # Finish
-logger "AP + STA configurations are finished! \n\r Please your Raspberry Pi will reboot in 5sec to apply changes..."
+logger "AP + STA configurations are finished!"
+logger "Please your Raspberry Pi will reboot in 5sec to apply changes..."
 sleep 5
 sudo reboot
