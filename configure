@@ -43,9 +43,9 @@ usage() {
 Configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 
 USAGE:
-    rpi-wifi --ap <ap_ssid> [<ap_password>] --client <client_password> [<client_password>] --country <iso_3166_country_code>
+    configure --ap <ap_ssid> [<ap_password>] --client <client_password> [<client_password>] --country <iso_3166_country_code>
     
-    rpi-wifi --ap MyAP myappass --client MyWifiSSID mywifipass --country FR
+    configure --ap MyAP myappass --client MyWifiSSID mywifipass --country FR
 
 PARAMETERS:
     -a, --ap      	    AP SSID & password
@@ -54,7 +54,7 @@ PARAMETERS:
     -cy, --country      ISO3166 Country Code
 
 FLAGS:
-    -n, --no-internet   Disable IP forwarding (by default is true)
+    -n, --no-internet   Disable IP forwarding
     -h, --help          Show this help
 EOF
     exit 0
