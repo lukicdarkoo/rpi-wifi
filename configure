@@ -201,7 +201,7 @@ EOF
 
 # Populate `/bin/start_wifi.sh`
 logger "Populate /bin/start_wifi.sh"
-sudo bash -c 'cat > /bin/rpi-wifi.sh' << EOF
+sudo bash -c 'cat > /bin/start_wifi.sh' << EOF
 echo 'Starting Wifi AP and client...'
 sleep 30
 sudo ifdown --force wlan0
@@ -212,13 +212,13 @@ $([ "${NO_INTERNET-}" != "true" ] && echo "sudo sysctl -w net.ipv4.ip_forward=1"
 $([ "${NO_INTERNET-}" != "true" ] && echo "sudo iptables -t nat -A POSTROUTING -s ${AP_IP_BEGIN}.0/24 ! -d ${AP_IP_BEGIN}.0/24 -j MASQUERADE")
 $([ "${NO_INTERNET-}" != "true" ] && echo "sudo systemctl restart dnsmasq")
 EOF
-sudo chmod +x /bin/rpi-wifi.sh
+sudo chmod +x /bin/start_wifi.sh
 
 # Create Reboot cron task
 logger "Create Reboot cron task"
 # do not create the same cron task if exist
-if crontab -l | grep -c "@reboot && sleep 10 /bin/rpi-wifi.sh" -ne 1; then
-    crontab -l | { cat; echo "@reboot && sleep 10 /bin/rpi-wifi.sh"; } | crontab -
+if crontab -l | grep -c "@reboot && sleep 10 /bin/start_wifi.sh" -ne 1; then
+    crontab -l | { cat; echo "@reboot && sleep 10 /bin/start_wifi.sh"; } | crontab -
 fi
 
 # unmask and enable dnsmasq.service / hostapd.service
