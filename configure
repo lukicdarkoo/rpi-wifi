@@ -204,7 +204,7 @@ EOF
 logger "Populate /bin/rpi-wifi.sh"
 sudo bash -c 'cat > /bin/rpi-wifi.sh' << EOF
 echo 'Starting Wifi AP and client after 30sec...'
-sleep 30
+#sleep 30
 sudo ifdown --force wlan0
 sudo ifdown --force ap0
 sudo ifup ap0
@@ -218,8 +218,8 @@ sudo chmod +x /bin/rpi-wifi.sh
 # Create Reboot cron task
 logger "Create Reboot cron task"
 # do not create the same cron task if exist
-if crontab -l | grep -c "@reboot && sleep 10 /bin/rpi-wifi.sh" -ne 1; then
-    crontab -l | { cat; echo "@reboot && sleep 10 /bin/rpi-wifi.sh"; } | crontab -
+if crontab -l | grep -c "@reboot && sleep 30 /bin/rpi-wifi.sh" -ne 1; then
+    crontab -l | { cat; echo "@reboot && sleep 30 /bin/rpi-wifi.sh"; } | crontab -
 fi
 
 # unmask and enable dnsmasq.service / hostapd.service
