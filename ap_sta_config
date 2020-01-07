@@ -221,7 +221,7 @@ sleep 1
 echo -e "3sec...\n\r"
 sleep 1
 echo -e "2sec...\n\r"
-sleep 1
+sleep 1sudp apt-get install hostapd
 echo -e "1sec...\n\r"
 sleep 1
 echo -e "0sec...\n\r"
@@ -235,6 +235,26 @@ logger "Create Reboot cron task"
 # do not create the same cron task if exist
 if crontab -l | grep -c "@reboot && sleep 20 /bin/rpi-wifi.sh" -ne 1; then
     crontab -l | { cat; echo "@reboot && sleep 20 /bin/rpi-wifi.sh"; } | crontab -
+fi
+
+# Populate `/bin/manage-ap0-iface.sh`
+logger "Populate /bin/manage-ap0-iface.sh"
+sudo bash -c 'cat > /bin/manage-ap0-iface.sh' << EOF
+# check if hostapd service succes to start or not
+# in our case, it cannot start when /var/run/hostapd/ap0 exist
+# so we have to delete it
+
+if test service hostapd status | grep -c "Active: active (running)" -ne 1; then 
+    sudo rm -rf /var/run/hostapd/ap0 | echo "ap0 interface does not exist, the faillure is elsewhere"
+fi
+
+EOF
+
+# Create hostapd ap0 error monitor
+logger "Create hostapd ap0 error monitor"
+# do not create the same cron task if exist
+if crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh" -ne 1; then
+    crontab -l | { cat; echo "* * * * * /bin/manage-ap0-iface.sh"; } | crontab -
 fi
 
 # unmask and enable dnsmasq.service / hostapd.service
