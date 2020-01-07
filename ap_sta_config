@@ -27,6 +27,7 @@ welcome() {
     echo -e " 88     88   dP                    .d88888P.     88    88     88  "
     echo -e " "
     echo -e "                                                version ${VERSION}"
+    echo -e " By https://github.com/MkLHX                                      "
     echo -e "${GREEN}"
     echo -e "Manage AP + STA modes on Raspberry Pi with the same wifi chip\n\n"
 }
@@ -205,7 +206,6 @@ logger "Populate /bin/rpi-wifi.sh"
 sudo bash -c 'cat > /bin/rpi-wifi.sh' << EOF
 #!/bin/bash
 echo 'Starting Wifi AP and client...'
-# sleep 30
 sudo ifdown --force wlan0
 sudo ifdown --force ap0
 sudo ifup ap0
@@ -233,8 +233,8 @@ sudo chmod +x /bin/rpi-wifi.sh
 # Create Reboot cron task
 logger "Create Reboot cron task"
 # do not create the same cron task if exist
-if crontab -l | grep -c "@reboot /bin/rpi-wifi.sh" -ne 1; then
-    crontab -l | { cat; echo "@reboot /bin/rpi-wifi.sh"; } | crontab -
+if crontab -l | grep -c "@reboot && sleep 20 /bin/rpi-wifi.sh" -ne 1; then
+    crontab -l | { cat; echo "@reboot && sleep 20 /bin/rpi-wifi.sh"; } | crontab -
 fi
 
 # unmask and enable dnsmasq.service / hostapd.service
