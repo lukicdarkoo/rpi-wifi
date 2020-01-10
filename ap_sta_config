@@ -257,9 +257,9 @@ sudo chmod +x /bin/rpi-wifi.sh
 # Create Reboot cron task
 logger "Create Reboot cron task"
 # do not create the same cron task if exist
-reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot && sleep 30 /bin/rpi-wifi.sh")
+reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 30 && /bin/rpi-wifi.sh")
 if test $reboot_cron_exist -ne 1; then
-    sudo crontab -l | { cat; echo "@reboot && sleep 30 /bin/rpi-wifi.sh"; } | crontab -
+    sudo crontab -l | { cat; echo "@reboot sleep 30 && /bin/rpi-wifi.sh"; } | crontab -
 fi
 
 # unmask and enable dnsmasq.service / hostapd.service
