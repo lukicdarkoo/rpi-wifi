@@ -209,7 +209,8 @@ sudo bash -c 'cat > /bin/manage-ap0-iface.sh' << EOF
 # in our case, it cannot start when /var/run/hostapd/ap0 exist
 # so we have to delete it
 echo 'Check if hostapd.service is hang cause ap0 exist...'
-if service hostapd status | grep -c "Active: active (running)" -ne 1; then 
+hostapd_is_running=$(service hostapd status | grep -c "Active: active (running)")
+if test $hostapd_is_running -ne 1; then 
     sudo rm -rf /var/run/hostapd/ap0 | echo "ap0 interface does not exist, the faillure is elsewhere"
 fi
 
@@ -219,7 +220,8 @@ sudo chmod +x /bin/manage-ap0-iface.sh
 # Create hostapd ap0 error monitor
 logger "Create hostapd ap0 error monitor"
 # do not create the same cron task if exist
-if crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh" -ne 1; then
+check_ap0_cron_exist=$(crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh")
+if test $check_ap0_cron_exist -ne 1; then
     crontab -l | { cat; echo "* * * * * /bin/manage-ap0-iface.sh"; } | crontab -
 fi
 
@@ -247,7 +249,7 @@ sleep 1
 echo -e "1sec...\n\r"
 sleep 1
 echo -e "0sec...\n\r"
-sudo wpa_cli reconfigure
+sudo wpa_cli -i wlan0 reconfigure
 
 EOF
 sudo chmod +x /bin/rpi-wifi.sh
@@ -255,8 +257,9 @@ sudo chmod +x /bin/rpi-wifi.sh
 # Create Reboot cron task
 logger "Create Reboot cron task"
 # do not create the same cron task if exist
-if crontab -l | grep -c "@reboot && sleep 20 /bin/rpi-wifi.sh" -ne 1; then
-    crontab -l | { cat; echo "@reboot && sleep 20 /bin/rpi-wifi.sh"; } | crontab -
+reboot_cron_exist=$(crontab -l | grep -c "@reboot && sleep 30 /bin/rpi-wifi.sh")
+if test $reboot_cron_exist -ne 1; then
+    crontab -l | { cat; echo "@reboot && sleep 30 /bin/rpi-wifi.sh"; } | crontab -
 fi
 
 # unmask and enable dnsmasq.service / hostapd.service
