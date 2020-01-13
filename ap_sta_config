@@ -217,12 +217,16 @@ fi
 EOF
 sudo chmod +x /bin/manage-ap0-iface.sh
 
+# create ap sta log folder
+sudo mkdir /var/log/ap_sta_wifi
+sudo chown -R pi:www-data /var/log/ap_sta_wifi
+
 # Create hostapd ap0 error monitor
 logger "Create hostapd ap0 error monitor"
 # do not create the same cron task if exist
-check_ap0_cron_exist=$(sudo crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh")
+check_ap0_cron_exist=$(sudo crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
 if test $check_ap0_cron_exist -ne 1; then
-    sudo crontab -l | { cat; echo "* * * * * /bin/manage-ap0-iface.sh"; } | crontab -
+    sudo crontab -l | { cat; echo "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1"; } | crontab -
 fi
 
 # Populate `/bin/rpi-wifi.sh`
@@ -257,9 +261,9 @@ sudo chmod +x /bin/rpi-wifi.sh
 # Create Reboot cron task
 logger "Create Reboot cron task"
 # do not create the same cron task if exist
-reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 30 && /bin/rpi-wifi.sh")
+reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 30 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
 if test $reboot_cron_exist -ne 1; then
-    sudo crontab -l | { cat; echo "@reboot sleep 30 && /bin/rpi-wifi.sh"; } | crontab -
+    sudo crontab -l | { cat; echo "@reboot sleep 30 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1"; } | crontab -
 fi
 
 # unmask and enable dnsmasq.service / hostapd.service
