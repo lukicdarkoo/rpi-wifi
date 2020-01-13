@@ -126,6 +126,7 @@ sudo bash -c 'cat > /etc/udev/rules.d/70-persistent-net.rules' << EOF
 SUBSYSTEM=="ieee80211", ACTION=="add|change", ATTR{macaddress}=="${MAC_ADDRESS}", KERNEL=="phy0", \
   RUN+="/sbin/iw phy phy0 interface add ap0 type __ap", \
   RUN+="/bin/ip link set ap0 address ${MAC_ADDRESS}
+
 EOF
 
 # Populate `/etc/dnsmasq.conf`
@@ -138,6 +139,7 @@ server=8.8.8.8
 domain-needed
 bogus-priv
 dhcp-range=${AP_IP_BEGIN}.50,${AP_IP_BEGIN}.150,12h
+
 EOF
 
 # Populate `/etc/hostapd/hostapd.conf`
@@ -158,12 +160,14 @@ $([ $AP_PASSPHRASE ] && echo "wpa_passphrase=${AP_PASSPHRASE}")
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP CCMP
 rsn_pairwise=CCMP
+
 EOF
 
 # Populate `/etc/default/hostapd`
 logger "Populate /etc/default/hostapd"
 sudo bash -c 'cat > /etc/default/hostapd' << EOF
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
+
 EOF
 
 # Populate `/etc/wpa_supplicant/wpa_supplicant.conf`
@@ -177,6 +181,7 @@ network={
     $([ $CLIENT_PASSPHRASE ] && echo "psk=\"${CLIENT_PASSPHRASE}\"")
     id_str="AP1"
 }
+
 EOF
 
 # Populate `/etc/network/interfaces`
@@ -199,6 +204,7 @@ allow-hotplug wlan0
 iface wlan0 inet manual
     wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
 iface AP1 inet dhcp
+
 EOF
 
 # Populate `/bin/manage-ap0-iface.sh`
@@ -224,9 +230,9 @@ sudo chown -R pi:www-data /var/log/ap_sta_wifi
 # Create hostapd ap0 error monitor
 logger "Create hostapd ap0 error monitor"
 # do not create the same cron task if exist
-check_ap0_cron_exist=$(crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
+check_ap0_cron_exist=$(sudo crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
 if test $check_ap0_cron_exist -ne 1; then
-    sudo crontab -l | { cat; echo "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1"; } | crontab -
+    sudo crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | sudo crontab -
 fi
 
 # Populate `/bin/rpi-wifi.sh`
@@ -241,18 +247,8 @@ sudo ifup wlan0
 sudo sysctl -w net.ipv4.ip_forward=1
 sudo iptables -t nat -A POSTROUTING -s 192.168.10.0/24 ! -d 192.168.10.0/24 -j MASQUERADE
 sudo systemctl restart dnsmasq
-echo 'WPA Supplicant reconfigure in'
-echo -e "5sec...\n\r"
-sleep 1
-echo -e "4sec...\n\r"
-sleep 1
-echo -e "3sec...\n\r"
-sleep 1
-echo -e "2sec...\n\r"
-sleep 1
-echo -e "1sec...\n\r"
-sleep 1
-echo -e "0sec...\n\r"
+echo 'WPA Supplicant reconfigure in 5sec...'
+sleep 5
 sudo wpa_cli -i wlan0 reconfigure
 
 EOF
@@ -261,9 +257,9 @@ sudo chmod +x /bin/rpi-wifi.sh
 # Create Reboot cron task
 logger "Create Reboot cron task"
 # do not create the same cron task if exist
-reboot_cron_exist=$(crontab -l | grep -c "@reboot sleep 30 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
+reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 30 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
 if test $reboot_cron_exist -ne 1; then
-    sudo crontab -l | { cat; echo "@reboot sleep 30 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1"; } | crontab -
+    sudo crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 30 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | sudo crontab -
 fi
 
 # unmask and enable dnsmasq.service / hostapd.service
@@ -275,5 +271,15 @@ sudo systemctl daemon-reload
 # Finish
 logger "AP + STA configurations are finished!"
 logger "Please your Raspberry Pi will reboot in 5sec to apply changes..."
-sleep 5
+echo -e "5...\n"
+sleep 1
+echo -e "4s..\n"
+sleep 1
+echo -e "3...\n"
+sleep 1
+echo -e "2...\n"
+sleep 1
+echo -e "1...\n"
+sleep 1
+echo -e "0...\n"
 sudo reboot
