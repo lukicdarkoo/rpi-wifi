@@ -146,7 +146,7 @@ sudo apt -y update
 sudo apt -y upgrade
 sudo apt -y install dnsmasq dhcpcd hostapd cron
 
-if test "${STA_ONLY}" != true ; then
+if test true != "${STA_ONLY}" ; then
     # Populate `/etc/udev/rules.d/70-persistent-net.rules`
     logger "Populate /etc/udev/rules.d/70-persistent-net.rules"
 sudo bash -c 'cat > /etc/udev/rules.d/70-persistent-net.rules' << EOF
@@ -157,7 +157,7 @@ RUN+="/bin/ip link set ap0 address ${MAC_ADDRESS}
 EOF
 fi
 
-if test "${STA_ONLY}" != true ; then
+if test true != "${STA_ONLY}" ; then
     # Populate `/etc/dnsmasq.conf`
     logger "Populate /etc/dnsmasq.conf"
 sudo bash -c 'cat > /etc/dnsmasq.conf' << EOF
@@ -172,7 +172,7 @@ dhcp-range=${AP_IP_BEGIN}.50,${AP_IP_BEGIN}.150,12h
 EOF
 fi
 
-if test "${STA_ONLY}" != true ; then
+if test true != "${STA_ONLY}" ; then
     # Populate `/etc/hostapd/hostapd.conf`
     logger "Populate /etc/hostapd/hostapd.conf"
 sudo bash -c 'cat > /etc/hostapd/hostapd.conf' << EOF
@@ -195,7 +195,7 @@ rsn_pairwise=CCMP
 EOF
 fi
 
-if test "${STA_ONLY}" != true ; then
+if test true != "${STA_ONLY}" ; then
     # Populate `/etc/default/hostapd`
     logger "Populate /etc/default/hostapd"
 sudo bash -c 'cat > /etc/default/hostapd' << EOF
@@ -204,7 +204,7 @@ DAEMON_CONF="/etc/hostapd/hostapd.conf"
 EOF
 fi
 
-if test "${AP_ONLY}" != true ; then
+if test true != "${AP_ONLY}" ; then
     # Populate `/etc/wpa_supplicant/wpa_supplicant.conf`
     logger "Populate /etc/wpa_supplicant/wpa_supplicant.conf"
 sudo bash -c 'cat > /etc/wpa_supplicant/wpa_supplicant.conf' << EOF
@@ -243,7 +243,7 @@ iface AP1 inet dhcp
 
 EOF
 
-if test "${STA_ONLY}" != true ; then
+if test true != "${STA_ONLY}" ; then
     # Populate `/bin/manage-ap0-iface.sh`
     logger "Populate /bin/manage-ap0-iface.sh"
 sudo bash -c 'cat > /bin/manage-ap0-iface.sh' << EOF
@@ -266,17 +266,17 @@ fi
 sudo mkdir -p /var/log/ap_sta_wifi
 sudo chown -R pi:www-data /var/log/ap_sta_wifi
 
-if test "${STA_ONLY}" != true ; then
-    # Create hostapd ap0 error monitor
-    logger "Create hostapd ap0 error monitor"
-    # do not create the same cron task if exist
-    check_ap0_cron_exist=$(sudo crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
-    if test 1 -ne $check_ap0_cron_exist ; then
-        sudo crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | sudo crontab -
-    fi
+# if test "${STA_ONLY}" != true ; then
+# Create hostapd ap0 error monitor
+logger "Create hostapd ap0 error monitor"
+# do not create the same cron task if exist
+check_ap0_cron_exist=$(sudo crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
+if test 1 -ne $check_ap0_cron_exist ; then
+    sudo crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | sudo crontab -
 fi
+# fi
 
-if test "${STA_ONLY}" != true ; then
+if test true != "${STA_ONLY}" ; then
     # Populate `/bin/rpi-wifi.sh`
     logger "Populate /bin/rpi-wifi.sh"
 sudo bash -c 'cat > /bin/rpi-wifi.sh' << EOF
@@ -297,17 +297,17 @@ EOF
     sudo chmod +x /bin/rpi-wifi.sh
 fi
 
-if test "${STA_ONLY}" != true ; then
-    # Create Reboot cron task
-    logger "Create Reboot cron task"
-    # do not create the same cron task if exist
-    reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
-    if test 1 -ne $reboot_cron_exist ; then
-        sudo crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | sudo crontab -
-    fi
+# if test "${AP_ONLY}" != true ; then
+# Create Reboot cron task
+logger "Create Reboot cron task"
+# do not create the same cron task if exist
+reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
+if test 1 -ne $reboot_cron_exist ; then
+    sudo crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | sudo crontab -
 fi
+# fi
 
-if test "${STA_ONLY}" != true ; then
+if test true != "${STA_ONLY}" ; then
     # unmask and enable dnsmasq.service / hostapd.service
     logger "Unmask and enable dnsmasq.service / hostapd.service"
     sudo systemctl unmask dnsmasq.service hostapd.service
@@ -315,17 +315,17 @@ if test "${STA_ONLY}" != true ; then
     sudo systemctl daemon-reload
 fi
 
-if test "${STA_ONLY}" == true ; then
+if test true == "${STA_ONLY}" ; then
     wpa_cli -i wlan0 reconfigure
 fi
 
 # Finish
-if test "${STA_ONLY}" == true && test "${AP_ONLY}" != true ; then
+if test true == "${STA_ONLY}" && test true != "${AP_ONLY}" ; then
     logger "STA configuration is finished!"
-elif test "${STA_ONLY}" != true && test "${AP_ONLY}" == true
+elif test true != "${STA_ONLY}" && test true == "${AP_ONLY}"
 then
     logger "AP configuration is finished!"
-elif test "${STA_ONLY}" == true && test "${AP_ONLY}" == true
+elif test true == "${STA_ONLY}" && test true == "${AP_ONLY}"
 then
     logger "AP + STA configurations are finished!"
     logger "Please your Raspberry Pi will reboot in 5sec to apply changes..."
