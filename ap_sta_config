@@ -125,7 +125,7 @@ done
 set -- "${POSITIONAL[@]}"
 
 #[ $AP_SSID ] || usage
-#[ $AP_SSID && $AP_ONLY || $CLIENT_SSID && $ARG_COUNTRY_CODE] || usage
+[ $AP_SSID && $CLIENT_SSID && $ARG_COUNTRY_CODE || $AP_SSID && $AP_ONLY || $CLIENT_SSID && $ARG_COUNTRY_CODE && $STA_ONLY ] || usage
 
 COUNTRY_CODE=${ARG_COUNTRY_CODE:-'FR'}
 AP_IP=${ARG_AP_IP:-'192.168.10.1'}
