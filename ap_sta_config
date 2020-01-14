@@ -2,7 +2,7 @@
 # The script configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 # Distribution Raspbian Buster
 # works on:
-#           -Raspberry Pi Zero W 
+#           -Raspberry Pi Zero W
 #           -Raspberry Pi 3 B+
 #           -Raspberry Pi 3 A+
 # Licence: GPLv3
@@ -19,17 +19,17 @@ RASPBERRY='\033[0;35m'
 GREEN='\033[1;32m'
 welcome() {
     echo -e "${RASPBERRY}\n"
-    echo -e "  .d888888   888888ba              .d88888b. .d888888b. .d888888  "
-    echo -e "  d8     88   88     8b     a8     d8            88     d8     88 "
-    echo -e " 88aaaaa88a a88aaaa8P    aa8888aa   a88888a      88    88aaaaa88a "
-    echo -e " 88     88   88             8a            88     88    88     88  "
-    echo -e " 88     88   88                           8b     88    88     88  "
-    echo -e " 88     88   dP                    .d88888P.     88    88     88  "
-    echo -e " "
-    echo -e "                                                version ${VERSION}"
-    echo -e " By https://github.com/MkLHX                                      "
-    echo -e "${GREEN}"
-    echo -e "Manage AP + STA modes on Raspberry Pi with the same wifi chip\n\n"
+    echo -e "  .d888888   888888ba              .d88888b. .d888888b. .d888888   "
+    echo -e "  d8     88   88     8b     a8     d8            88     d8     88  "
+    echo -e " 88aaaaa88a a88aaaa8P    aa8888aa   a88888a      88    88aaaaa88a  "
+    echo -e " 88     88   88             8a            88     88    88     88   "
+    echo -e " 88     88   88                           8b     88    88     88   "
+    echo -e " 88     88   dP                    .d88888P.     88    88     88   "
+    echo -e "                                                                   "
+    echo -e "                                                version ${VERSION} "
+    echo -e " By https://github.com/MkLHX                                       "
+    echo -e "${GREEN}                                                           "
+    echo -e "Manage AP + STA modes on Raspberry Pi with the same wifi chip\n\n  "
 }
 
 welcome
@@ -45,16 +45,25 @@ Configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 
 USAGE:
     ap_sta_config --ap <ap_ssid> [<ap_password>] --client <client_password> [<client_password>] --country <iso_3166_country_code>
-    
+
+    # configure AP + STA
     ap_sta_config --ap ap_ssid ap_passphrases --client client_ssid client_passphrase --country FR
+
+    # update the AP configuration
+    ap_sta_config --ap ap_ssid ap_passphrases --ap-only
+
+    # update the STA (client) configuration
+    ap_sta_config --client client_ssid client_passphrase --country FR --sta-only
 
 PARAMETERS:
     -a, --ap      	    AP SSID & password
     -c, --client	    Client SSID & password
-    -i, --ip            AP IP
-    -cy, --country      ISO3166 Country Code
+    -i, --ip            AP IP (by default ip pattern 192.168.10.x)
+    -cy, --country      ISO3166 Country Code (by default FR)
 
 FLAGS:
+    -ao, --ap-only      Set only AP
+    -so, --sta-only     Set only STA
     -n, --no-internet   Disable IP forwarding
     -h, --help          Show this help
 EOF
@@ -64,46 +73,54 @@ EOF
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
-key="$1"
-
-case $key in
-    -c|--client)
-    CLIENT_SSID="$2"
-    CLIENT_PASSPHRASE="$3"
-    shift
-    shift
-    shift
-    ;;
-    -a|--ap)
-    AP_SSID="$2"
-    AP_PASSPHRASE="$3"
-    shift
-    shift
-    shift
-    ;;
-    -cy|--country)
-    ARG_COUNTRY_CODE="$2"
-    shift
-    shift
-    ;;
-    -i|--ip)
-    ARG_AP_IP="$2"
-    shift
-    shift
-    ;;
-    -h|--help)
-    usage
-    shift
-	;;
-    -n|--no-internet)
-    NO_INTERNET="true"
-    shift
-    ;;
-    *)
-    POSITIONAL+=("$1")
-    shift
-    ;;
-esac
+    key="$1"
+    
+    case $key in
+        -c|--client)
+            CLIENT_SSID="$2"
+            CLIENT_PASSPHRASE="$3"
+            shift
+            shift
+            shift
+        ;;
+        -a|--ap)
+            AP_SSID="$2"
+            AP_PASSPHRASE="$3"
+            shift
+            shift
+            shift
+        ;;
+        -cy|--country)
+            ARG_COUNTRY_CODE="$2"
+            shift
+            shift
+        ;;
+        -i|--ip)
+            ARG_AP_IP="$2"
+            shift
+            shift
+        ;;
+        -h|--help)
+            usage
+            shift
+        ;;
+        -n|--no-internet)
+            NO_INTERNET="true"
+            shift
+        ;;
+        -ao|--ap-only)
+            AP_ONLY="true"
+            shift
+        ;;
+        -so|--sta-only)
+            STA_ONLY="true"
+            shift
+        ;;
+        *)
+            POSITIONAL+=("$1")
+            shift
+        ;;
+    esac
 done
 set -- "${POSITIONAL[@]}"
 
@@ -120,17 +137,20 @@ sudo apt -y update
 sudo apt -y upgrade
 sudo apt -y install dnsmasq dhcpcd hostapd cron
 
-# Populate `/etc/udev/rules.d/70-persistent-net.rules`
-logger "Populate /etc/udev/rules.d/70-persistent-net.rules"
+if test "$STA_ONLY" != true ; then
+    # Populate `/etc/udev/rules.d/70-persistent-net.rules`
+    logger "Populate /etc/udev/rules.d/70-persistent-net.rules"
 sudo bash -c 'cat > /etc/udev/rules.d/70-persistent-net.rules' << EOF
 SUBSYSTEM=="ieee80211", ACTION=="add|change", ATTR{macaddress}=="${MAC_ADDRESS}", KERNEL=="phy0", \
-  RUN+="/sbin/iw phy phy0 interface add ap0 type __ap", \
-  RUN+="/bin/ip link set ap0 address ${MAC_ADDRESS}
+RUN+="/sbin/iw phy phy0 interface add ap0 type __ap", \
+RUN+="/bin/ip link set ap0 address ${MAC_ADDRESS}
 
 EOF
+fi
 
-# Populate `/etc/dnsmasq.conf`
-logger "Populate /etc/dnsmasq.conf"
+if test "$STA_ONLY" != true ; then
+    # Populate `/etc/dnsmasq.conf`
+    logger "Populate /etc/dnsmasq.conf"
 sudo bash -c 'cat > /etc/dnsmasq.conf' << EOF
 interface=lo,ap0
 no-dhcp-interface=lo,wlan0
@@ -141,9 +161,11 @@ bogus-priv
 dhcp-range=${AP_IP_BEGIN}.50,${AP_IP_BEGIN}.150,12h
 
 EOF
+fi
 
-# Populate `/etc/hostapd/hostapd.conf`
-logger "Populate /etc/hostapd/hostapd.conf"
+if test "$STA_ONLY" != true ; then
+    # Populate `/etc/hostapd/hostapd.conf`
+    logger "Populate /etc/hostapd/hostapd.conf"
 sudo bash -c 'cat > /etc/hostapd/hostapd.conf' << EOF
 ctrl_interface=/var/run/hostapd
 ctrl_interface_group=0
@@ -162,16 +184,20 @@ wpa_pairwise=TKIP CCMP
 rsn_pairwise=CCMP
 
 EOF
+fi
 
-# Populate `/etc/default/hostapd`
-logger "Populate /etc/default/hostapd"
+if test "$STA_ONLY" != true ; then
+    # Populate `/etc/default/hostapd`
+    logger "Populate /etc/default/hostapd"
 sudo bash -c 'cat > /etc/default/hostapd' << EOF
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
 
 EOF
+fi
 
-# Populate `/etc/wpa_supplicant/wpa_supplicant.conf`
-logger "Populate /etc/wpa_supplicant/wpa_supplicant.conf"
+if test "$AP_ONLY" != true ; then
+    # Populate `/etc/wpa_supplicant/wpa_supplicant.conf`
+    logger "Populate /etc/wpa_supplicant/wpa_supplicant.conf"
 sudo bash -c 'cat > /etc/wpa_supplicant/wpa_supplicant.conf' << EOF
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
@@ -183,6 +209,7 @@ network={
 }
 
 EOF
+fi
 
 # Populate `/etc/network/interfaces`
 logger "Populate /etc/network/interfaces"
@@ -207,8 +234,9 @@ iface AP1 inet dhcp
 
 EOF
 
-# Populate `/bin/manage-ap0-iface.sh`
-logger "Populate /bin/manage-ap0-iface.sh"
+if test "$STA_ONLY" != true ; then
+    # Populate `/bin/manage-ap0-iface.sh`
+    logger "Populate /bin/manage-ap0-iface.sh"
 sudo bash -c 'cat > /bin/manage-ap0-iface.sh' << EOF
 #!/bin/bash
 # check if hostapd service succes to start or not
@@ -216,27 +244,32 @@ sudo bash -c 'cat > /bin/manage-ap0-iface.sh' << EOF
 # so we have to delete it
 echo 'Check if hostapd.service is hang cause ap0 exist...'
 hostapd_is_running=$(service hostapd status | grep -c "Active: active (running)")
-if test $hostapd_is_running -ne 1; then 
+if test $hostapd_is_running -ne 1; then
     sudo rm -rf /var/run/hostapd/ap0 | echo "ap0 interface does not exist, the faillure is elsewhere"
 fi
 
 EOF
-sudo chmod +x /bin/manage-ap0-iface.sh
+    sudo chmod +x /bin/manage-ap0-iface.sh
+fi
+
 
 # create ap sta log folder
 sudo mkdir /var/log/ap_sta_wifi
 sudo chown -R pi:www-data /var/log/ap_sta_wifi
 
-# Create hostapd ap0 error monitor
-logger "Create hostapd ap0 error monitor"
-# do not create the same cron task if exist
-check_ap0_cron_exist=$(sudo crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
-if test $check_ap0_cron_exist -ne 1; then
-    sudo crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | sudo crontab -
+if test "$STA_ONLY" != true ; then
+    # Create hostapd ap0 error monitor
+    logger "Create hostapd ap0 error monitor"
+    # do not create the same cron task if exist
+    check_ap0_cron_exist=$(sudo crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
+    if test $check_ap0_cron_exist -ne 1; then
+        sudo crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | sudo crontab -
+    fi
 fi
 
-# Populate `/bin/rpi-wifi.sh`
-logger "Populate /bin/rpi-wifi.sh"
+if test "$STA_ONLY" != true ; then
+    # Populate `/bin/rpi-wifi.sh`
+    logger "Populate /bin/rpi-wifi.sh"
 sudo bash -c 'cat > /bin/rpi-wifi.sh' << EOF
 #!/bin/bash
 echo 'Starting Wifi AP and client...'
@@ -244,32 +277,50 @@ sudo ifdown --force wlan0
 sudo ifdown --force ap0
 sudo ifup ap0
 sudo ifup wlan0
-sudo sysctl -w net.ipv4.ip_forward=1
-sudo iptables -t nat -A POSTROUTING -s 192.168.10.0/24 ! -d 192.168.10.0/24 -j MASQUERADE
-sudo systemctl restart dnsmasq
+$([ "${NO_INTERNET-}" != "true" ] && echo "sudo sysctl -w net.ipv4.ip_forward=1")
+$([ "${NO_INTERNET-}" != "true" ] && echo "sudo iptables -t nat -A POSTROUTING -s ${AP_IP_BEGIN}.0/24 ! -d ${AP_IP_BEGIN}.0/24 -j MASQUERADE")
+$([ "${NO_INTERNET-}" != "true" ] && echo "sudo systemctl restart dnsmasq")
 echo 'WPA Supplicant reconfigure in 5sec...'
 sleep 5
 sudo wpa_cli -i wlan0 reconfigure
 
 EOF
-sudo chmod +x /bin/rpi-wifi.sh
-
-# Create Reboot cron task
-logger "Create Reboot cron task"
-# do not create the same cron task if exist
-reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 30 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
-if test $reboot_cron_exist -ne 1; then
-    sudo crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 30 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | sudo crontab -
+    sudo chmod +x /bin/rpi-wifi.sh
 fi
 
-# unmask and enable dnsmasq.service / hostapd.service
-logger "Unmask and enable dnsmasq.service / hostapd.service"
-sudo systemctl unmask dnsmasq.service hostapd.service
-sudo systemctl enable dnsmasq.service hostapd.service
-sudo systemctl daemon-reload
+if test "$STA_ONLY" != true ; then
+    # Create Reboot cron task
+    logger "Create Reboot cron task"
+    # do not create the same cron task if exist
+    reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
+    if test $reboot_cron_exist -ne 1; then
+        sudo crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | sudo crontab -
+    fi
+fi
+
+if test "$STA_ONLY" != true ; then
+    # unmask and enable dnsmasq.service / hostapd.service
+    logger "Unmask and enable dnsmasq.service / hostapd.service"
+    sudo systemctl unmask dnsmasq.service hostapd.service
+    sudo systemctl enable dnsmasq.service hostapd.service
+    sudo systemctl daemon-reload
+fi
+
+if test "$STA_ONLY" == true ; then
+    wpa_cli -i wlan0 reconfigure
+fi
 
 # Finish
-logger "AP + STA configurations are finished!"
+if test "$STA_ONLY" == true && "$AP_ONLY" != true ; then
+    logger "STA configuration is finished!"
+elif test "$STA_ONLY" != true && "$AP_ONLY" == true
+then
+    logger "AP configuration is finished!"
+elif test "$STA_ONLY" == true && "$AP_ONLY" == true
+then
+    logger "AP + STA configurations are finished!"
+fi
+
 logger "Please your Raspberry Pi will reboot in 5sec to apply changes..."
 echo -e "5...\n"
 sleep 1
