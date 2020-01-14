@@ -328,18 +328,17 @@ then
 elif test "${STA_ONLY}" == true && test "${AP_ONLY}" == true
 then
     logger "AP + STA configurations are finished!"
+    logger "Please your Raspberry Pi will reboot in 5sec to apply changes..."
+    echo -e "5...\n"
+    sleep 1
+    echo -e "4s..\n"
+    sleep 1
+    echo -e "3...\n"
+    sleep 1
+    echo -e "2...\n"
+    sleep 1
+    echo -e "1...\n"
+    sleep 1
+    echo -e "0...\n"
+    sudo reboot
 fi
-
-logger "Please your Raspberry Pi will reboot in 5sec to apply changes..."
-echo -e "5...\n"
-sleep 1
-echo -e "4s..\n"
-sleep 1
-echo -e "3...\n"
-sleep 1
-echo -e "2...\n"
-sleep 1
-echo -e "1...\n"
-sleep 1
-echo -e "0...\n"
-sudo reboot
