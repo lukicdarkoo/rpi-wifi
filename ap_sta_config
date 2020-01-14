@@ -124,7 +124,6 @@ do
 done
 set -- "${POSITIONAL[@]}"
 
-#[ $AP_SSID ] || usage
 ( test -v AP_SSID && test -v CLIENT_SSID && test -v ARG_COUNTRY_CODE ) || ( test -v AP_SSID && test -v AP_ONLY ) || ( test -v CLIENT_SSID && test -v ARG_COUNTRY_CODE && test -v STA_ONLY ) || usage
 
 COUNTRY_CODE=${ARG_COUNTRY_CODE:-'FR'}
@@ -315,12 +314,9 @@ if test true != "${STA_ONLY}" ; then
     sudo systemctl daemon-reload
 fi
 
-if test true == "${STA_ONLY}" ; then
-    wpa_cli -i wlan0 reconfigure
-fi
-
 # Finish
 if test true == "${STA_ONLY}" && test true != "${AP_ONLY}" ; then
+    wpa_cli -i wlan0 reconfigure
     logger "STA configuration is finished!"
 elif test true != "${STA_ONLY}" && test true == "${AP_ONLY}"
 then
