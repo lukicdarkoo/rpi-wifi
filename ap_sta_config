@@ -252,7 +252,7 @@ sudo bash -c 'cat > /bin/manage-ap0-iface.sh' << EOF
 # so we have to delete it
 echo 'Check if hostapd.service is hang cause ap0 exist...'
 hostapd_is_running=$(service hostapd status | grep -c "Active: active (running)")
-if test $hostapd_is_running -ne 1; then
+if test "${hostapd_is_running}" -ne 1; then
     sudo rm -rf /var/run/hostapd/ap0 | echo "ap0 interface does not exist, the faillure is elsewhere"
 fi
 
