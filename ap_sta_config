@@ -70,6 +70,9 @@ EOF
     exit 0
 }
 
+STA_ONLY="false"
+AP_ONLY="false"
+
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -109,11 +112,11 @@ do
             shift
         ;;
         -ao|--ap-only)
-            AP_ONLY="true"
+            $AP_ONLY="true"
             shift
         ;;
         -so|--sta-only)
-            STA_ONLY="true"
+            $STA_ONLY="true"
             shift
         ;;
         *)
