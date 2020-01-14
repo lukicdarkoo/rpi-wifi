@@ -263,7 +263,7 @@ fi
 
 
 # create ap sta log folder
-sudo mkdir /var/log/ap_sta_wifi
+sudo mkdir -p /var/log/ap_sta_wifi
 sudo chown -R pi:www-data /var/log/ap_sta_wifi
 
 if test "${STA_ONLY}" != true ; then
