@@ -32,8 +32,6 @@ welcome() {
     echo -e "Manage AP + STA modes on Raspberry Pi with the same wifi chip\n\n  "
 }
 
-welcome
-
 logger(){
     echo -e "${GREEN}\n"
     echo "${1}"
@@ -141,6 +139,8 @@ fi
 
 
 if test true != "${STA_ONLY}" && test true != "${AP_ONLY}" ; then
+# welcome cli user
+welcome
 # Install dependencies
 logger "install dependencies"
 sudo apt -y update
