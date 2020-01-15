@@ -14,10 +14,10 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-VERSION=$(curl -s "https://api.github.com/repos/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")' )
 RASPBERRY='\033[0;35m'
 GREEN='\033[1;32m'
 welcome() {
+    VERSION=$(curl -s "https://api.github.com/repos/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")' )
     echo -e "${RASPBERRY}\n"
     echo -e "  .d888888   888888ba              .d88888b. .d888888b. .d888888   "
     echo -e "  d8     88   88     8b     a8     d8            88     d8     88  "
