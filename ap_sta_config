@@ -139,11 +139,15 @@ if ! test -v STA_ONLY ; then
     STA_ONLY="false"
 fi
 
+
+if test true != "${STA_ONLY}" && test true != "${AP_ONLY}" ; then
 # Install dependencies
 logger "install dependencies"
 sudo apt -y update
 sudo apt -y upgrade
 sudo apt -y install dnsmasq dhcpcd hostapd cron
+fi
+
 
 if test true != "${STA_ONLY}" ; then
     # Populate `/etc/udev/rules.d/70-persistent-net.rules`
