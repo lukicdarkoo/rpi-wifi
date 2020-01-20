@@ -27,7 +27,7 @@
 ## Flags
 ```bash
 # Set only STA (used to update STA configuration)
--so, --sta-only     Set only STA
+-so, --sta-only
 
 # Set only AP (used to update AP configuration)
 -ao, --ap-only
