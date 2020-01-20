@@ -26,6 +26,12 @@
 
 ## Flags
 ```bash
+# Set only STA (used to update STA configuration)
+-so, --sta-only     Set only STA
+
+# Set only AP (used to update AP configuration)
+-ao, --ap-only
+
 # no ip forwarding on ap + sta or ap + eth mode
 -n / --no-internet
 
