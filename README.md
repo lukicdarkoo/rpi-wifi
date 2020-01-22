@@ -14,14 +14,17 @@
 # ap ssid + ap passphrase
 -a / --ap <ap_ssid> <ap_passphrase>
 
-# ap ip address
+# ap ip address (by default ip pattern 192.168.10.x)
 -i / --ip <ap_ip>
 
 # sta ssid + sta passphrase
 -c / --client <sta_ssid> <sta_passphrase>
 
-# ISO3166 Country Code for wpa_supplicant
+# ISO3166 Country Code for wpa_supplicant (by default FR)
 -cy / --country <ISO3166_country_code>
+
+# mode Wi-Fi a = IEEE 802.11a, b = IEEE 802.11b, g = IEEE 802.11g (by default b)
+-hw / --hwmode <mode>
 
 ```
 
