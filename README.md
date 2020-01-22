@@ -23,7 +23,7 @@
 # ISO3166 Country Code for wpa_supplicant (by default FR)
 -cy / --country <ISO3166_country_code>
 
-# mode Wi-Fi a = IEEE 802.11a, b = IEEE 802.11b, g = IEEE 802.11g (by default b)
+# mode Wi-Fi a = IEEE 802.11a, b = IEEE 802.11b, g = IEEE 802.11g (by default g)
 -hw / --hwmode <mode>
 
 ```
