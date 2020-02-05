@@ -287,6 +287,8 @@ if test true != "${STA_ONLY}" ; then
     check_ap0_cron_exist=$(sudo crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
     if test 1 -ne $check_ap0_cron_exist ; then
         sudo crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | sudo crontab -
+    else
+        logger "crontask exists"
     fi
 fi
 
@@ -318,6 +320,8 @@ if test true != "${STA_ONLY}" ; then
     reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
     if test 1 -ne $reboot_cron_exist ; then
         sudo crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | sudo crontab -
+    else
+        logger "crontask exists"
     fi
 fi
 
