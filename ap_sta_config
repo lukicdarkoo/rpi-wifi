@@ -34,7 +34,7 @@ welcome() {
 }
 
 logger(){
-    echo -e "${GREEN}\n"
+    echo -e "${GREEN}"
     echo "${1}"
 }
 
@@ -282,7 +282,7 @@ sudo chown -R pi:www-data /var/log/ap_sta_wifi
 
 if test true != "${STA_ONLY}" ; then
     # Create hostapd ap0 error monitor
-    logger "Create hostapd ap0 error monitor"
+    logger "Create hostapd ap0 error monitor crontask"
     # do not create the same cron task if exist
     check_ap0_cron_exist=$(sudo crontab -l | grep -c "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
     if test 1 -ne $check_ap0_cron_exist ; then
@@ -315,7 +315,7 @@ fi
 
 if test true != "${STA_ONLY}" ; then
     # Create Reboot cron task
-    logger "Create Reboot cron task"
+    logger "Create reboot crontask"
     # do not create the same cron task if exist
     reboot_cron_exist=$(sudo crontab -l | grep -c "@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
     if test 1 -ne $reboot_cron_exist ; then
