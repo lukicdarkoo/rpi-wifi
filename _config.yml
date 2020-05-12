@@ -1,6 +1,6 @@
 theme: jekyll-theme-minimal
 langs: [en_US]
-baseurl: "/docs"
+baseurl: "/"
 sass:
   sass_dir: css
   style: compressed
