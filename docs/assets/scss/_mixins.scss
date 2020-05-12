@@ -1,0 +1,8 @@
+@mixin heading-font {
+  font-family: 'Catamaran';
+  font-weight: 800 !important;
+}
+
+@mixin body-font {
+  font-family: 'Lato';
+}

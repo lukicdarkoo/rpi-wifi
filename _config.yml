@@ -1,1 +1,20 @@
 theme: jekyll-theme-minimal
+langs: [en_US]
+baseurl: "/"
+sass:
+  sass_dir: css
+  style: compressed
+markdown: kramdown
+# permalink: /404.html
+kramdown:
+  input: GFM
+  hard_wrap: false
+highlighter: rouge
+gems:
+  - jekyll-paginate
+  - jekyll-seo-tag
+plugins:
+  - jekyll-seo-tag
+title: "Simultaneous AP & STA on raspberry pi"
+description: "Simultaneous AP & STA on raspberry pi with the same wifi chip!"
+author: "Mickael Lehoux"

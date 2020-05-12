@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Simultaneous AP & STA on Raspberry Pi with the same chip!</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="/assets/css/one-page-wonder.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Simultaneous AP & STA on Raspberry Pi</a>
+    </div>
+  </nav>
+
+  <header class="masthead text-center text-white">
+    <div class="masthead-content">
+      <div class="container">
+        <h1 class="masthead-heading mb-0">AP & STA <br>on Raspberry Pi 3</h1>
+        <h2 class="masthead-subheading mb-0">With the same wifi chip!</h2>
+        <a href="https://github.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP" class="btn btn-primary btn-xl rounded-pill mt-5">View the Project on GitHub</a>
+      </div>
+    </div>
+    <div class="bg-circle-1 bg-circle"></div>
+    <div class="bg-circle-2 bg-circle"></div>
+    <div class="bg-circle-3 bg-circle"></div>
+    <div class="bg-circle-4 bg-circle"></div>
+  </header>
+
+  <section>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 order-lg-2">
+          <div class="p-5">
+            <img class="img-fluid " src="/assets/img/rpi3a+.png" alt="raspberry pi 3A+">
+          </div>
+        </div>
+        <div class="col-lg-6 order-lg-1">
+          <div class="p-5">
+            <h2 class="display-4">Tested on</h2>
+            <ul class="list-unstyled ml-3">
+              <li class="list-item">Raspberry Pi Zero</li>
+              <li class="list-item">Raspberry Pi 3 B+</li>
+              <li class="list-item">Raspberry Pi 3 A+</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="p-5">
+            <img class="img-fluid " src="/assets/img/control.gif" alt="CLI image">
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="p-5">
+            <h2 class="display-4">Total control with cli parameters</h2>
+            <ul class="list-unstyled ml-3">
+              <li class="list-item">
+                # ap ssid + ap passphrase<br>
+                <strong>$ </strong><code class="bg-light">--ap your_ap_ssid your_ap_passphrase</code>
+              </li>
+              <li class="list-item">
+                # ap ip address (by default ip pattern 192.168.10.x)<br>
+                <strong>$ </strong><code>--ip your_ap_ip_range</code>
+              </li>
+              <li class="list-item">
+                # sta ssid + sta passphrase<br>
+                <strong>$ </strong><code>--client your_sta_ssid your_sta_passphrase</code>
+              </li>
+              <li class="list-item">
+                # ISO3166 Country Code for wpa_supplicant (by default FR)<br>
+                <strong>$ </strong><code>--country your_ISO3166_country_code</code>
+              </li>
+              <li class="list-item">
+                # mode Wi-Fi a = IEEE 802.11a, b = IEEE 802.11b, g = IEEE 802.11g (by default g)<br>
+                <strong>$ </strong><code>--hwmode wifi_mode</code>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 order-lg-2">
+          <div class="p-5">
+            <img class="img-fluid " src="/assets/img/nerd.gif" alt="">
+          </div>
+        </div>
+        <div class="col-lg-6 order-lg-1">
+          <div class="p-5">
+            <h2 class="display-4">Optionals flags</h2>
+            <ul class="list-unstyled ml-3">
+              <li class="list-item">
+                # Set only STA (used to update STA configuration)<br>
+                <strong>$ </strong><code class="bg-light">--sta-only</code>
+              </li>
+              <li class="list-item">
+                # Set only AP (used to update AP configuration)<br>
+                <strong>$ </strong><code class="bg-light">--ap-only</code>
+              </li>
+              <li class="list-item">
+                # no ip forwarding on ap + sta or ap + eth mode<br>
+                <strong>$ </strong><code class="bg-light">--no-internet</code>
+              </li>
+              <li class="list-item">
+                # show script help<br>
+                <strong>$ </strong><code class="bg-light">--help</code>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="p-5">
+            <img class="img-fluid " src="/assets/img/launch.gif" alt="animated rocket launch image">
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="p-5">
+            <h2 class="display-4">Launch it without any installation</h2>
+            <p>
+              <strong>$ </strong>
+              <code class="bg-light">
+                curl https://raw.githubusercontent.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/master/ap_sta_config | bash -s -- --ap ap_ssid ap_passphrases --client client_ssid client_passphrase --country FR
+              </code>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-blue">
+    <div class="container">
+      <p class="m-0 text-center text-white small">Copyright &copy; GreenPonik 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

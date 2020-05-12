@@ -1,0 +1,45 @@
+{
+    "title": "Simultaneous AP & STA on Raspberry Pi",
+    "name": "ap-sta-raspberrypi-same-wifi-chip",
+    "version": "1.0.1",
+    "scripts": {
+        "start": "node_modules/.bin/gulp watch"
+    },
+    "description": "Simultaneous AP & STA on Raspberry Pi with same chip!",
+    "keywords": [
+        "electronic",
+        "raspberry pi",
+        "wifi AP mode",
+        "wifi STA mode",
+        "simultaneous AP and STA wifi mode",
+        "shell"
+    ],
+    "homepage": "https://mklhx.github.io/AP_STA_RPI_SAME_WIFI_CHIP/",
+    "bugs": {
+        "url": "https://github.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/issues"
+    },
+    "license": "MIT",
+    "author": "Mickael Lehoux",
+    "contributors": [
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP"
+    },
+    "dependencies": {
+        "bootstrap": "4.3.1",
+        "jquery": "3.4.1"
+    },
+    "devDependencies": {
+        "browser-sync": "2.26.7",
+        "del": "5.1.0",
+        "gulp": "4.0.2",
+        "gulp-autoprefixer": "7.0.0",
+        "gulp-clean-css": "4.2.0",
+        "gulp-header": "2.0.9",
+        "gulp-plumber": "^1.2.1",
+        "gulp-rename": "1.4.0",
+        "gulp-sass": "4.0.2",
+        "merge-stream": "2.0.0"
+    }
+}

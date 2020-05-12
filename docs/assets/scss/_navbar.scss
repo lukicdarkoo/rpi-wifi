@@ -1,0 +1,22 @@
+.navbar-custom {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  // background-color: fade-out($black, 0.3);
+  background-color: fade-out($primary, 0.3);
+  .navbar-brand {
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 0.1rem;
+    font-weight: 700;
+  }
+  .navbar-nav {
+    .nav-item {
+      .nav-link {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.1rem;
+      }
+    }
+  }
+}
