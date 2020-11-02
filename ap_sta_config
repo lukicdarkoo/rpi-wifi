@@ -154,8 +154,10 @@ _welcome
 _logger "check if dependencies needed"
 sudo apt-get -y update
 sudo apt-get -y upgrade
-if [[ $(dpkg -l | grep -c dnsmasq) == 0 ]] ; then
-sudo apt-get -y install dnsmasq
+
+# keep order of dependencies installation
+if [[ $(dpkg -l | grep -c cron) ==  0 ]] ; then
+sudo apt-get -y install cron
 fi
 
 if [[ $(dpkg -l | grep -c dhcpcd) == 0 ]] ; then
@@ -166,9 +168,10 @@ if [[ $(dpkg -l | grep -c hostapd) == 0  ]] ; then
 sudo apt-get -y install hostapd
 fi
 
-if [[ $(dpkg -l | grep -c cron) ==  0 ]] ; then
-sudo apt-get -y install cron
+if [[ $(dpkg -l | grep -c dnsmasq) == 0 ]] ; then
+sudo apt-get -y install dnsmasq
 fi
+
 
 if test true != "${STA_ONLY}" ; then
     # Populate `/etc/udev/rules.d/70-persistent-net.rules`
@@ -296,7 +299,7 @@ if test true != "${STA_ONLY}" ; then
     # do not create the same cron task if exist
     check_ap0_cron_exist=$(sudo crontab -l | grep -cF "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
     if test 1 != $check_ap0_cron_exist ; then
-        sudo crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | sudo crontab -
+        sudo crontab -e | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | sudo crontab -
     else
         _logger "crontask exists"
     fi
@@ -329,7 +332,7 @@ if test true != "${STA_ONLY}" ; then
     # do not create the same cron task if exist
     reboot_cron_exist=$(sudo crontab -l | grep -cF "@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
     if test 1 != $reboot_cron_exist ; then
-        sudo crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | sudo crontab -
+        sudo crontab -e | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | sudo crontab -
     else
         _logger "crontask exists"
     fi
