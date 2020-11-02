@@ -148,28 +148,26 @@ if ! test -v STA_ONLY ; then
     STA_ONLY="false"
 fi
 
-
-# if test true != "${STA_ONLY}" && test true != "${AP_ONLY}" ; then
 # welcome cli user
 _welcome
 # Install dependencies
 _logger "check if dependencies needed"
-sudo apt -y update
-sudo apt -y upgrade
+sudo apt-get -y update
+sudo apt-get -y upgrade
 if [[ $(dpkg -l | grep -c dnsmasq) == 0 ]] ; then
-sudo apt -y install dnsmasq
+sudo apt-get -y install dnsmasq
 fi
 
 if [[ $(dpkg -l | grep -c dhcpcd) == 0 ]] ; then
-sudo apt -y install dhcpcd
+sudo apt-get -y install dhcpcd
 fi
 
 if [[ $(dpkg -l | grep -c hostapd) == 0  ]] ; then
-sudo apt -y install hostapd
+sudo apt-get -y install hostapd
 fi
 
 if [[ $(dpkg -l | grep -c cron) ==  0 ]] ; then
-sudo apt -y install cron
+sudo apt-get -y install cron
 fi
 
 if test true != "${STA_ONLY}" ; then
