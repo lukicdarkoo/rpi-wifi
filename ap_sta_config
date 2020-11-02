@@ -57,6 +57,8 @@ USAGE:
     # update the STA (client) configuration
     ap_sta_config --client client_ssid client_passphrase --country FR --sta-only
 
+    # logs are written in /var/log/ap_sta_wifi folder
+
 PARAMETERS:
     -a, --ap      	    AP SSID & password
     -c, --client	    Client SSID & password
