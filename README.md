@@ -6,6 +6,7 @@
     - Raspberry Pi Zero W 
     - Raspberry Pi 3 B+
     - Raspberry Pi 3 A+
+    - Raspberry Pi 4 B+
 
 ### With distribution Raspbian Buster
 
