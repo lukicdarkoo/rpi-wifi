@@ -6,7 +6,8 @@
     - Raspberry Pi Zero W 
     - Raspberry Pi 3 B+
     - Raspberry Pi 3 A+
-    - Raspberry Pi 4 B+
+
+## TODO add compatibility for B+ raspberry (with ethernet)
 
 ### With distribution Raspbian Buster
 

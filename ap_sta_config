@@ -250,6 +250,12 @@ EOF
 fi
 
 # Populate `/etc/network/interfaces`
+# TODO manage eth0 interface
+# if current device is model B+ with ethernet port
+# auto eth0
+# allow-hotplug eth0
+# iface eth0 inet manual
+#
 _logger "Populate /etc/network/interfaces"
 sudo bash -c 'cat > /etc/network/interfaces' << EOF
 source-directory /etc/network/interfaces.d
@@ -257,6 +263,7 @@ source-directory /etc/network/interfaces.d
 auto lo
 auto ap0
 auto wlan0
+
 iface lo inet loopback
 
 allow-hotplug ap0
@@ -359,17 +366,4 @@ elif test true != "${STA_ONLY}" && test true != "${AP_ONLY}"
 then
     _logger "AP + STA configurations are finished!"
     _logger "You need to reboot Raspbery Pi to apply changes.."
-    # _logger "Please your Raspberry Pi will reboot in 5sec to apply changes..."
-    # echo -e "5...\n"
-    # sleep 1
-    # echo -e "4s..\n"
-    # sleep 1
-    # echo -e "3...\n"
-    # sleep 1
-    # echo -e "2...\n"
-    # sleep 1
-    # echo -e "1...\n"
-    # sleep 1
-    # echo -e "0...\n"
-    # sudo reboot
 fi
