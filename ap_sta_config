@@ -244,6 +244,7 @@ network={
     ssid="${CLIENT_SSID}"
     $([ $CLIENT_PASSPHRASE ] && echo "psk=\"${CLIENT_PASSPHRASE}\"")
     id_str="AP1"
+    scan_ssid=1
 }
 
 EOF
