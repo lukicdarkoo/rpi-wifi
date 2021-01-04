@@ -155,7 +155,7 @@ _welcome
 # Install dependencies
 _logger "check if dependencies needed"
 sudo apt-get -y update
-sudo apt-get -y upgrade
+# sudo apt-get -y upgrade
 
 # keep order of dependencies installation
 if [[ $(dpkg -l | grep -c cron) ==  0 ]] ; then
