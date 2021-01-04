@@ -357,14 +357,12 @@ if test true != "${STA_ONLY}" ; then
 fi
 
 # Finish
-if test true == "${STA_ONLY}" && test true != "${AP_ONLY}" ; then
+if test true == "${STA_ONLY}" && test true != "${AP_ONLY}"; then
     wpa_cli -i wlan0 reconfigure
     _logger "STA configuration is finished!"
-elif test true != "${STA_ONLY}" && test true == "${AP_ONLY}"
-then
+elif test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     _logger "AP configuration is finished!"
-elif test true != "${STA_ONLY}" && test true != "${AP_ONLY}"
-then
+elif test true != "${STA_ONLY}" && test true != "${AP_ONLY}"; then
     _logger "AP + STA configurations are finished!"
     _logger "You need to reboot Raspbery Pi to apply changes.."
 fi
