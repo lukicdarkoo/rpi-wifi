@@ -154,23 +154,25 @@ fi
 _welcome
 # Install dependencies
 _logger "check if dependencies needed"
-sudo apt-get -y update
-# sudo apt-get -y upgrade
 
 # keep order of dependencies installation
 if [[ $(dpkg -l | grep -c cron) ==  0 ]] ; then
+sudo apt-get -y update
 sudo apt-get -y install cron
 fi
 
 if [[ $(dpkg -l | grep -c dhcpcd) == 0 ]] ; then
+sudo apt-get -y update
 sudo apt-get -y install dhcpcd
 fi
 
 if [[ $(dpkg -l | grep -c hostapd) == 0  ]] ; then
+sudo apt-get -y update
 sudo apt-get -y install hostapd
 fi
 
 if [[ $(dpkg -l | grep -c dnsmasq) == 0 ]] ; then
+sudo apt-get -y update
 sudo apt-get -y install dnsmasq
 fi
 
