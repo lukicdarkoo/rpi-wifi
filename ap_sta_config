@@ -14,6 +14,8 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+DEFAULT='\033[0;39m'
+WHITE='\033[0;02m'
 RASPBERRY='\033[0;35m'
 GREEN='\033[1;32m'
 _welcome() {
@@ -36,6 +38,7 @@ _welcome() {
 _logger(){
     echo -e "${GREEN}"
     echo "${1}"
+    echo -e "${DEFAULT}"
 }
 
 _usage() {
