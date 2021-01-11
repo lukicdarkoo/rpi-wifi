@@ -162,7 +162,8 @@ _logger "check if dependencies needed"
 if [[ $(dpkg -l | grep -c cron) ==  0 ]] ; then
 sudo apt-get -y update
 sudo apt-get -y install cron
-sudo crontab -e >>
+# init crontab by adding comment
+sudo crontab -l | { cat; echo -e "# comment for crontab init"; } | sudo crontab -
 fi
 
 if [[ $(dpkg -l | grep -c dhcpcd) == 0 ]] ; then
