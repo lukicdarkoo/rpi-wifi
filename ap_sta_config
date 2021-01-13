@@ -366,9 +366,11 @@ fi
 # Finish
 if test true == "${STA_ONLY}" && test true != "${AP_ONLY}"; then
     sudo wpa_cli -i wlan0 reconfigure
+    sleep 15
     sudo wpa_cli -i wlan0 reassociate
+    sleep 3
     sudo ifdown --force wlan0
-    sleep 1
+    sleep 2
     sudo ifup --force wlan0
     _logger "STA configuration is finished!"
 elif test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
