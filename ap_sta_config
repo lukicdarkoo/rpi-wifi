@@ -20,7 +20,7 @@ RASPBERRY='\033[0;35m'
 GREEN='\033[1;32m'
 _welcome() {
     # VERSION=$(curl -s "https://api.github.com/repos/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")' )
-    VERSION="1.1"
+    VERSION="1.2"
     echo -e "${RASPBERRY}\n"
     echo -e "  .d888888   888888ba              .d88888b. .d888888b. .d888888   "
     echo -e "  d8     88   88     8b     a8     d8            88     d8     88  "
@@ -311,8 +311,8 @@ sudo mkdir -p /var/log/ap_sta_wifi
 sudo chown -R pi:www-data /var/log/ap_sta_wifi
 
 if test true != "${STA_ONLY}" ; then
-    # Create hostapd ap0 error monitor
-    _logger "Create hostapd ap0 error monitor crontask"
+    # Create hostapd ap0 monitor
+    _logger "Create hostapd ap0 monitor crontask"
     # do not create the same cron task if exist
     check_ap0_cron_exist=$(sudo crontab -l | grep -cF "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
     if test 1 != $check_ap0_cron_exist ; then
@@ -367,8 +367,8 @@ fi
 if test true == "${STA_ONLY}" && test true != "${AP_ONLY}"; then
     sudo wpa_cli -i wlan0 reconfigure
     sleep 15
-    sudo wpa_cli -i wlan0 reassociate
-    sleep 3
+    # sudo wpa_cli -i wlan0 reassociate
+    # sleep 3
     sudo ifdown --force wlan0
     sleep 2
     sudo ifup --force wlan0
