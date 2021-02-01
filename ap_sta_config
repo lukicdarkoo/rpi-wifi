@@ -139,7 +139,7 @@ done
 set -- "${POSITIONAL[@]}"
 
 if [ $(id -u) != 0 ]; then
-    echo -e "${GREEN}"
+    echo -e "${RED}"
     echo "You need to be root to run this script"
     echo "Please run sudo bash '$0'"
     echo -e "${DEFAULT}"
@@ -198,8 +198,8 @@ if test true != "${STA_ONLY}"; then
     _logger "Populate /etc/udev/rules.d/70-persistent-net.rules"
     bash -c 'cat > /etc/udev/rules.d/70-persistent-net.rules' <<EOF
 SUBSYSTEM=="ieee80211", ACTION=="add|change", ATTR{macaddress}=="${MAC_ADDRESS}", KERNEL=="phy0", \
-RUN+="/sbin/iw phy phy0 interface add ap0 type __ap", \
-RUN+="/bin/ip link set ap0 address ${MAC_ADDRESS}
+    RUN+="/sbin/iw phy phy0 interface add ap0 type __ap", \
+    RUN+="/bin/ip link set ap0 address ${MAC_ADDRESS}
 
 EOF
 fi
