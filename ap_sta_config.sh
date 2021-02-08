@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # The script configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 # Distribution Raspbian Buster
 # works on:
