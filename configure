@@ -81,13 +81,19 @@ COUNTRY="$(wpa_cli -i wlan0 get country)"
 # Install dependencies
 sudo apt -y update
 sudo apt -y upgrade
-sudo apt -y install dnsmasq dhcpcd hostapd
+sudo apt -y install dnsmasq hostapd
 
 # Populate `/etc/udev/rules.d/70-persistent-net.rules`
 sudo bash -c 'cat >> /etc/udev/rules.d/70-persistent-net.rules' << EOF
 SUBSYSTEM=="ieee80211", ACTION=="add|change", KERNEL=="phy0", \
   RUN+="/sbin/iw phy phy0 interface add ap0 type __ap", \
   RUN+="/bin/ip link set ap0 address \$attr{macaddress}"
+EOF
+
+# Exclude ap0 from `/etc/dhcpcd.conf`
+sudo bash -c 'cat >> /etc/dhcpcd.conf' << EOF
+
+denyinterfaces ap0
 EOF
 
 # Populate `/etc/dnsmasq.conf`
