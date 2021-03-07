@@ -167,6 +167,7 @@ EOF
 
 # Populate `/bin/start_wifi.sh`
 sudo bash -c 'cat > /bin/rpi-wifi.sh' << EOF
+#!/bin/bash
 echo 'Starting Wifi AP and client...'
 sudo ifdown --force wlan0
 sudo ifdown --force ap0
