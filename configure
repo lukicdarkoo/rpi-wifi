@@ -81,7 +81,7 @@ COUNTRY="$(wpa_cli -i wlan0 get country)"
 # Install dependencies
 sudo apt -y update
 sudo apt -y upgrade
-sudo apt -y install dnsmasq dhcpcd hostapd cron
+sudo apt -y install dnsmasq dhcpcd hostapd
 
 # Populate `/etc/udev/rules.d/70-persistent-net.rules`
 sudo bash -c 'cat >> /etc/udev/rules.d/70-persistent-net.rules' << EOF
@@ -190,7 +190,8 @@ sudo chmod +x /bin/rpi-wifi.sh
 # EOF
 # sudo systemctl daemon-reload
 # sudo systemctl enable rpi-wifi.service
-crontab -l | { cat; echo "@reboot /bin/rpi-wifi.sh"; } | crontab -
+# crontab -l | { cat; echo "@reboot /bin/rpi-wifi.sh"; } | crontab -
+sed -i 's:# By default this script does nothing.:# By default this script does nothing.\n\n/bin/rpi-wifi.sh:' /etc/rc.local
 
 # Finish
 echo "Wifi configuration is finished! Please reboot your Raspberry Pi to apply changes..."
