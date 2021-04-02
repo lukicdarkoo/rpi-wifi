@@ -167,30 +167,32 @@ _welcome
 # Install dependencies
 _logger "check if dependencies needed"
 
-# keep order of dependencies installation
-if [[ $(dpkg -l | grep -c cron) == 0 ]]; then
-    apt-get -y update
-    apt-get -y install cron
-    # init crontab by adding comment
-    crontab -l | {
-        cat
-        echo -e "# comment for crontab init"
-    } | crontab -
-fi
+if test true == "${STA_ONLY}" && test true != "${AP_ONLY}"; then
+    # keep order of dependencies installation
+    if [[ $(dpkg -l | grep -c cron) == 0 ]]; then
+        apt-get -y update
+        apt-get -y install cron
+        # init crontab by adding comment
+        crontab -l | {
+            cat
+            echo -e "# comment for crontab init"
+        } | crontab -
+    fi
 
-if [[ $(dpkg -l | grep -c dhcpcd) == 0 ]]; then
-    apt-get -y update
-    apt-get -y install dhcpcd
-fi
+    if [[ $(dpkg -l | grep -c dhcpcd) == 0 ]]; then
+        apt-get -y update
+        apt-get -y install dhcpcd
+    fi
 
-if [[ $(dpkg -l | grep -c hostapd) == 0 ]]; then
-    apt-get -y update
-    apt-get -y install hostapd
-fi
+    if [[ $(dpkg -l | grep -c hostapd) == 0 ]]; then
+        apt-get -y update
+        apt-get -y install hostapd
+    fi
 
-if [[ $(dpkg -l | grep -c dnsmasq) == 0 ]]; then
-    apt-get -y update
-    apt-get -y install dnsmasq
+    if [[ $(dpkg -l | grep -c dnsmasq) == 0 ]]; then
+        apt-get -y update
+        apt-get -y install dnsmasq
+    fi
 fi
 
 if test true != "${STA_ONLY}"; then
@@ -198,8 +200,8 @@ if test true != "${STA_ONLY}"; then
     _logger "Populate /etc/udev/rules.d/70-persistent-net.rules"
     bash -c 'cat > /etc/udev/rules.d/70-persistent-net.rules' <<EOF
 SUBSYSTEM=="ieee80211", ACTION=="add|change", ATTR{macaddress}=="${MAC_ADDRESS}", KERNEL=="phy0", \
-    RUN+="/sbin/iw phy phy0 interface add ap0 type __ap", \
-    RUN+="/bin/ip link set ap0 address ${MAC_ADDRESS}
+RUN+="/sbin/iw phy phy0 interface add ap0 type __ap", \
+RUN+="/bin/ip link set ap0 address ${MAC_ADDRESS}
 
 EOF
 fi
