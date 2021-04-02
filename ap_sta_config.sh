@@ -164,10 +164,11 @@ fi
 
 # welcome cli user
 _welcome
-# Install dependencies
-_logger "check if dependencies needed"
 
 if test true == "${STA_ONLY}" && test true != "${AP_ONLY}"; then
+    # Install dependencies
+    _logger "check if dependencies needed"
+
     # keep order of dependencies installation
     if [[ $(dpkg -l | grep -c cron) == 0 ]]; then
         apt-get -y update
