@@ -48,7 +48,7 @@
 
 ## Usage
 ```bash
-curl https://raw.githubusercontent.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/master/ap_sta_config.sh | bash -s -- --ap ap_ssid ap_passphrases --client client_ssid client_passphrase --country FR
+curl https://raw.githubusercontent.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/master/ap_sta_config.sh | sudo bash -s -- --ap ap_ssid ap_passphrases --client client_ssid client_passphrase --country FR
 
 ```
 
