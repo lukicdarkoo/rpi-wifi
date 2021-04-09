@@ -388,9 +388,11 @@ if test true == "${STA_ONLY}" && test true != "${AP_ONLY}"; then
     sleep 15
     # wpa_cli -i wlan0 reassociate
     # sleep 3
-    ifdown --force wlan0
+    # ifdown --force wlan0
+    ifconfig wlan0 down
     sleep 2
-    ifup --force wlan0
+    # ifup --force wlan0
+    ifconfig wlan0 up
     _logger "STA configuration is finished!"
 elif test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     _logger "AP configuration is finished!"
