@@ -321,7 +321,7 @@ fi
 
 # create ap sta log folder
 mkdir -p /var/log/ap_sta_wifi
-chown -R pi:www-data /var/log/ap_sta_wifi
+chown -R $USER:www-data /var/log/ap_sta_wifi
 
 if test true != "${STA_ONLY}"; then
     # Create hostapd ap0 monitor
