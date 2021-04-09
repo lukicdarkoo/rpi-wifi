@@ -48,19 +48,19 @@ _usage() {
 Configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 
 USAGE:
-    ap_sta_config --ap <ap_ssid> [<ap_password>] --client <client_password> [<client_password>] --country <iso_3166_country_code>
+    ap_sta_config.sh --ap <ap_ssid> [<ap_password>] --client <client_password> [<client_password>] --country <iso_3166_country_code>
 
     # configure AP + STA
-    ap_sta_config --ap ap_ssid ap_passphrases --client client_ssid client_passphrase --country FR
+    ap_sta_config.sh --ap ap_ssid ap_passphrases --client client_ssid client_passphrase --country FR
 
     # configure AP + STA and change the wifi mode
-    ap_sta_config --ap ap_ssid ap_passphrases --client client_ssid client_passphrase --country FR --hwmode b
+    ap_sta_config.sh --ap ap_ssid ap_passphrases --client client_ssid client_passphrase --country FR --hwmode b
 
     # update the AP configuration
-    ap_sta_config --ap ap_ssid ap_passphrases --ap-only
+    ap_sta_config.sh --ap ap_ssid ap_passphrases --ap-only
 
     # update the STA (client) configuration
-    ap_sta_config --client client_ssid client_passphrase --country FR --sta-only
+    ap_sta_config.sh --client client_ssid client_passphrase --country FR --sta-only
 
     # logs are written in /var/log/ap_sta_wifi folder
 
@@ -165,7 +165,7 @@ fi
 # welcome cli user
 _welcome
 
-if test true == "${STA_ONLY}" && test true != "${AP_ONLY}"; then
+if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     # Install dependencies
     _logger "check if dependencies needed"
 
