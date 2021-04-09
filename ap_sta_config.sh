@@ -141,7 +141,7 @@ set -- "${POSITIONAL[@]}"
 if [ $(id -u) != 0 ]; then
     echo -e "${RED}"
     echo "You need to be root to run this script"
-    echo "Please run sudo bash '$0'"
+    echo "Please run 'sudo bash $0'"
     echo -e "${DEFAULT}"
     exit 1
 fi
