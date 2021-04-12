@@ -27,9 +27,9 @@ _welcome() {
     echo -e "  .d888888   888888ba              .d88888b. .d888888b. .d888888   "
     echo -e "  d8     88   88     8b     a8     d8            88     d8     88  "
     echo -e " 88aaaaa88a a88aaaa8P    aa8888aa   a88888a      88    88aaaaa88a  "
-    echo -e " 88     88   88             8a            88     88    88     88   "
-    echo -e " 88     88   88                           8b     88    88     88   "
-    echo -e " 88     88   dP                    .d88888P.     88    88     88   "
+    echo -e " 88      88  88             8a            88     88    88      88  "
+    echo -e " 88      88  88                           8b     88    88      88  "
+    echo -e " 88      88  dP                    .d88888P.     88    88      88  "
     echo -e "                                                                   "
     echo -e "                                                version ${VERSION} "
     echo -e " By https://github.com/MkLHX                                       "
@@ -389,10 +389,10 @@ if test true == "${STA_ONLY}" && test true != "${AP_ONLY}"; then
     # wpa_cli -i wlan0 reassociate
     # sleep 3
     # ifdown --force wlan0
-    ifconfig wlan0 down
+    ifconfig wlan0 down # better way for docker
     sleep 2
     # ifup --force wlan0
-    ifconfig wlan0 up
+    ifconfig wlan0 up # better way for docker
     _logger "STA configuration is finished!"
 elif test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     _logger "AP configuration is finished!"
