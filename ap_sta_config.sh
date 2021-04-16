@@ -20,21 +20,24 @@ RASPBERRY='\033[0;35m'
 GREEN='\033[1;32m'
 RED='\033[1;31m'
 
+
 _welcome() {
-    # VERSION=$(curl -s "https://api.github.com/repos/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")' )
     VERSION="1.2"
     echo -e "${RASPBERRY}\n"
-    echo -e "  .d888888   888888ba              .d88888b. .d888888b. .d888888   "
-    echo -e "  d8     88   88     8b     a8     d8            88     d8     88  "
-    echo -e " 88aaaaa88a a88aaaa8P    aa8888aa   a88888a      88    88aaaaa88a  "
-    echo -e " 88      88  88             8a            88     88    88      88  "
-    echo -e " 88      88  88                           8b     88    88      88  "
-    echo -e " 88      88  dP                    .d88888P.     88    88      88  "
-    echo -e "                                                                   "
-    echo -e "                                                version ${VERSION} "
-    echo -e " By https://github.com/MkLHX                                       "
-    echo -e "${GREEN}                                                           "
-    echo -e "Manage AP + STA modes on Raspberry Pi with the same wifi chip\n\n  "
+    echo -e "                                                                       "
+    echo -e "  /888888  /8888888                         /888888  /88888888 /888888 "
+    echo -e " /88__  88| 88__  88          /88          /88__  88|__  88__//88__  88"
+    echo -e "| 88  \ 88| 88  \ 88         | 88         | 88  \__/   | 88  | 88  \ 88"
+    echo -e "| 88888888| 8888888/       /88888888      |  888888    | 88  | 88888888"
+    echo -e "| 88__  88| 88____/       |__  88__/       \____  88   | 88  | 88__  88"
+    echo -e "| 88  | 88| 88               | 88          /88  \ 88   | 88  | 88  | 88"
+    echo -e "| 88  | 88| 88               |__/         |  888888/   | 88  | 88  | 88"
+    echo -e "|__/  |__/|__/                             \______/    |__/  |__/  |__/"
+    echo -e "                                                                       "
+    echo -e "                                                    version ${VERSION} "
+    echo -e " By https://github.com/MkLHX                                           "
+    echo -e "${GREEN}                                                               "
+    echo -e "Manage AP + STA modes on Raspberry Pi with the same wifi chip\n\n      "
 }
 
 _logger() {
@@ -324,7 +327,6 @@ fi
 
 # create ap sta log folder
 mkdir -p /var/log/ap_sta_wifi
-# chown -R $USER:www-data /var/log/ap_sta_wifi
 
 if test true != "${STA_ONLY}"; then
     # Create hostapd ap0 monitor
@@ -366,12 +368,12 @@ if test true != "${STA_ONLY}"; then
     # Create Reboot cron task
     _logger "Create reboot crontask"
     # do not create the same cron task if exist
-    reboot_cron_exist=$(crontab -l | grep -cF "@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
+    reboot_cron_exist=$(EDITOR=nano crontab -l | grep -cF "@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
     if test 1 != $reboot_cron_exist; then
-        crontab -l | {
-            cat
-            echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"
-        } | crontab -
+        EDITOR=nano crontab -l > cron_jobs
+        echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n" >> cron_jobs
+        EDITOR=nano crontab cron_jobs
+        rm cron_jobs
     else
         _logger "crontask exists"
     fi
