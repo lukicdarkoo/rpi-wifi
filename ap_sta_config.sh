@@ -292,6 +292,9 @@ allow-hotplug ap0
 iface ap0 inet static
     address ${AP_IP}
     netmask 255.255.255.0
+    network ${AP_IP_BEGIN}.0
+    broadcast ${AP_IP_BEGIN}.255
+    gateway ${AP_IP}
     hostapd /etc/hostapd/hostapd.conf
 
 allow-hotplug wlan0
