@@ -181,10 +181,10 @@ if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
         #     cat
         #     echo -e "# comment for crontab init"
         # } | crontab -
-        EDITOR=nano crontab -l > cron_jobs
-        echo -e "# comment for crontab init\n" >> cron_jobs
-        EDITOR=nano crontab cron_jobs
-        rm cron_jobs
+        # EDITOR=nano crontab -l > cron_jobs
+        # echo -e "# comment for crontab init\n" >> cron_jobs
+        # EDITOR=nano crontab cron_jobs
+        # rm cron_jobs
     fi
 
     if [[ $(dpkg -l | grep -c dhcpcd) == 0 ]]; then
@@ -202,6 +202,11 @@ if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
         apt-get -y install dnsmasq
     fi
 fi
+
+EDITOR=nano crontab -l > cron_jobs
+echo -e "# comment for crontab init\n" >> cron_jobs
+EDITOR=nano crontab cron_jobs
+rm cron_jobs
 
 if test true != "${STA_ONLY}"; then
     # Populate `/etc/udev/rules.d/70-persistent-net.rules`
