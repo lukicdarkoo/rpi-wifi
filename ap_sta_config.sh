@@ -203,6 +203,7 @@ if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     fi
 fi
 
+# init crontab by adding comment
 EDITOR=nano crontab -l > cron_jobs
 echo -e "# comment for crontab init\n" >> cron_jobs
 EDITOR=nano crontab cron_jobs
@@ -336,19 +337,17 @@ fi
 
 # create ap sta log folder
 mkdir -p /var/log/ap_sta_wifi
+touch /var/log/ap_sta_wifi/ap0_mgnt.log
 
 if test true != "${STA_ONLY}"; then
     # Create hostapd ap0 monitor
     _logger "Create hostapd ap0 monitor crontask"
     # do not create the same cron task if exist
-    check_ap0_cron_exist=$(EDITOR=nano crontab -l | grep -cF "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
+    check_ap0_cron_exist=$(EDITOR=nano crontab -l | grep -cF "* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
     if test 1 != $check_ap0_cron_exist; then
-        # crontab -l | {
-        #     cat
-        #     echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"
-        # } | crontab -
+        # crontab -l | { cat echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" } | crontab -
         EDITOR=nano crontab -l > cron_jobs
-        echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" >> cron_jobs
+        echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" >> cron_jobs
         EDITOR=nano crontab cron_jobs
         rm cron_jobs
     else
@@ -379,12 +378,12 @@ fi
 
 if test true != "${STA_ONLY}"; then
     # Create Reboot cron task
-    _logger "Create reboot crontask"
+    _logger "Create AP and Client crontask"
     # do not create the same cron task if exist
-    reboot_cron_exist=$(EDITOR=nano crontab -l | grep -cF "@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
+    reboot_cron_exist=$(EDITOR=nano crontab -l | grep -cF "@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
     if test 1 != $reboot_cron_exist; then
         EDITOR=nano crontab -l > cron_jobs
-        echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n" >> cron_jobs
+        echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n" >> cron_jobs
         EDITOR=nano crontab cron_jobs
         rm cron_jobs
     else
