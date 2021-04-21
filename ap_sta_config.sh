@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # The script configures simultaneous AP and Managed Mode Wifi on Raspberry Pi
 # Distribution Raspbian Buster
 # works on:
@@ -177,10 +177,14 @@ if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
         apt-get -y update
         apt-get -y install cron
         # init crontab by adding comment
-        crontab -l | {
-            cat
-            echo -e "# comment for crontab init"
-        } | crontab -
+        # crontab -l | {
+        #     cat
+        #     echo -e "# comment for crontab init"
+        # } | crontab -
+        EDITOR=nano crontab -l > cron_jobs
+        echo -e "# comment for crontab init\n" >> cron_jobs
+        EDITOR=nano crontab cron_jobs
+        rm cron_jobs
     fi
 
     if [[ $(dpkg -l | grep -c dhcpcd) == 0 ]]; then
@@ -332,12 +336,16 @@ if test true != "${STA_ONLY}"; then
     # Create hostapd ap0 monitor
     _logger "Create hostapd ap0 monitor crontask"
     # do not create the same cron task if exist
-    check_ap0_cron_exist=$(crontab -l | grep -cF "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
+    check_ap0_cron_exist=$(EDITOR=nano crontab -l | grep -cF "* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
     if test 1 != $check_ap0_cron_exist; then
-        crontab -l | {
-            cat
-            echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"
-        } | crontab -
+        # crontab -l | {
+        #     cat
+        #     echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"
+        # } | crontab -
+        EDITOR=nano crontab -l > cron_jobs
+        echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" >> cron_jobs
+        EDITOR=nano crontab cron_jobs
+        rm cron_jobs
     else
         _logger "crontask exists"
     fi
@@ -379,6 +387,7 @@ if test true != "${STA_ONLY}"; then
     fi
 fi
 
+_logger "${STA_ONLY}"
 if test true != "${STA_ONLY}"; then
     # unmask and enable dnsmasq.service / hostapd.service
     _logger "Unmask and enable dnsmasq.service / hostapd.service"
