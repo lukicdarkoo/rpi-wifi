@@ -203,11 +203,14 @@ if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     fi
 fi
 
-# init crontab by adding comment
-EDITOR=nano crontab -l > cron_jobs
-echo -e "# comment for crontab init\n" >> cron_jobs
-EDITOR=nano crontab cron_jobs
-rm cron_jobs
+check_crontab_initialized=$(EDITOR=nano crontab -l | grep -cF "# comment for crontab init")
+if test 1 != $check_crontab_initialized; then
+    # init crontab by adding comment
+    EDITOR=nano crontab -l > cron_jobs
+    echo -e "# comment for crontab init\n" >> cron_jobs
+    EDITOR=nano crontab cron_jobs
+    rm cron_jobs
+fi
 
 if test true != "${STA_ONLY}"; then
     # Populate `/etc/udev/rules.d/70-persistent-net.rules`
