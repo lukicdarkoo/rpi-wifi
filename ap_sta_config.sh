@@ -24,7 +24,7 @@ GREEN='\033[1;32m'
 RED='\033[1;31m'
 
 _welcome() {
-    VERSION="1.4"
+    VERSION="1.5"
     echo -e "${RASPBERRY}\n"
     echo -e "                                                                       "
     echo -e "  /888888  /8888888                         /888888  /88888888 /888888 "
