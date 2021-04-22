@@ -11,7 +11,17 @@
 
 # set -exv
 
-source $(pwd)/ap_sta_config.sh
+DEFAULT='\033[0;39m'
+WHITE='\033[0;02m'
+RASPBERRY='\033[0;35m'
+GREEN='\033[1;32m'
+RED='\033[1;31m'
+
+_logger() {
+    echo -e "${GREEN}"
+    echo "${1}"
+    echo -e "${DEFAULT}"
+}
 
 check_crontab_initialized=$(crontab -l | grep -cF "# comment for crontab init")
 if test 1 != $check_crontab_initialized; then
