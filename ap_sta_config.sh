@@ -9,6 +9,8 @@
 # Author: Mickael Lehoux <mickael.lehoux@gmail.com>
 # Special thanks to: https://github.com/lukicdarkoo/rpi-wifi
 
+set -ex
+
 # Error management
 set -o errexit
 set -o pipefail
@@ -176,15 +178,6 @@ if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     if [[ $(dpkg -l | grep -c cron) == 0 ]]; then
         apt-get -y update
         apt-get -y install cron
-        # init crontab by adding comment
-        # crontab -l | {
-        #     cat
-        #     echo -e "# comment for crontab init"
-        # } | crontab -
-        # EDITOR=nano crontab -l > cron_jobs
-        # echo -e "# comment for crontab init\n" >> cron_jobs
-        # EDITOR=nano crontab cron_jobs
-        # rm cron_jobs
     fi
 
     if [[ $(dpkg -l | grep -c dhcpcd) == 0 ]]; then
@@ -338,26 +331,6 @@ EOF
     chmod +x /bin/manage-ap0-iface.sh
 fi
 
-# create ap sta log folder
-mkdir -p /var/log/ap_sta_wifi
-touch /var/log/ap_sta_wifi/ap0_mgnt.log
-
-if test true != "${STA_ONLY}"; then
-    # Create hostapd ap0 monitor
-    _logger "Create hostapd ap0 monitor crontask"
-    # do not create the same cron task if exist
-    check_ap0_cron_exist=$(EDITOR=nano crontab -l | grep -cF "* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
-    if test 1 != $check_ap0_cron_exist; then
-        # crontab -l | { cat echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" } | crontab -
-        EDITOR=nano crontab -l > cron_jobs
-        echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" >> cron_jobs
-        EDITOR=nano crontab cron_jobs
-        rm cron_jobs
-    else
-        _logger "crontask exists"
-    fi
-fi
-
 if test true != "${STA_ONLY}"; then
     # Populate `/bin/rpi-wifi.sh`
     _logger "Populate /bin/rpi-wifi.sh"
@@ -379,6 +352,27 @@ EOF
     chmod +x /bin/rpi-wifi.sh
 fi
 
+# create ap sta log folder
+mkdir -p /var/log/ap_sta_wifi
+touch /var/log/ap_sta_wifi/ap0_mgnt.log
+touch /var/log/ap_sta_wifi/on_boot.log
+
+if test true != "${STA_ONLY}"; then
+    # Create hostapd ap0 monitor
+    _logger "Create hostapd ap0 monitor crontask"
+    # do not create the same cron task if exist
+    check_ap0_cron_exist=$(EDITOR=nano crontab -l | grep -cF "* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
+    if test 1 != $check_ap0_cron_exist; then
+        # crontab -l | { cat echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" } | crontab -
+        EDITOR=nano crontab -l > cron_jobs
+        echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" >> cron_jobs
+        EDITOR=nano crontab cron_jobs
+        rm cron_jobs
+    else
+        _logger "crontask exists"
+    fi
+fi
+
 if test true != "${STA_ONLY}"; then
     # Create Reboot cron task
     _logger "Create AP and Client crontask"
@@ -394,7 +388,6 @@ if test true != "${STA_ONLY}"; then
     fi
 fi
 
-_logger "${STA_ONLY}"
 if test true != "${STA_ONLY}"; then
     # unmask and enable dnsmasq.service / hostapd.service
     _logger "Unmask and enable dnsmasq.service / hostapd.service"
