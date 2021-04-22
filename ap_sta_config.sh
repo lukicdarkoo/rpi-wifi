@@ -9,7 +9,7 @@
 # Author: Mickael Lehoux <mickael.lehoux@gmail.com>
 # Special thanks to: https://github.com/lukicdarkoo/rpi-wifi
 
-set -ex
+# set -exv
 
 # Error management
 set -o errexit
@@ -196,15 +196,6 @@ if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     fi
 fi
 
-check_crontab_initialized=$(EDITOR=nano crontab -l | grep -cF "# comment for crontab init")
-if test 1 != $check_crontab_initialized; then
-    # init crontab by adding comment
-    EDITOR=nano crontab -l > cron_jobs
-    echo -e "# comment for crontab init\n" >> cron_jobs
-    EDITOR=nano crontab cron_jobs
-    rm cron_jobs
-fi
-
 if test true != "${STA_ONLY}"; then
     # Populate `/etc/udev/rules.d/70-persistent-net.rules`
     _logger "Populate /etc/udev/rules.d/70-persistent-net.rules"
@@ -301,9 +292,9 @@ allow-hotplug ap0
 iface ap0 inet static
     address ${AP_IP}
     netmask 255.255.255.0
-    network ${AP_IP_BEGIN}.0
-    broadcast ${AP_IP_BEGIN}.255
-    gateway ${AP_IP}
+    # network ${AP_IP_BEGIN}.0
+    # broadcast ${AP_IP_BEGIN}.255
+    # gateway ${AP_IP}
     hostapd /etc/hostapd/hostapd.conf
 
 allow-hotplug wlan0
@@ -323,7 +314,7 @@ if test true != "${STA_ONLY}"; then
 # so we have to delete it
 echo 'Check if hostapd.service is hang cause ap0 exist...'
 hostapd_is_running=\$(service hostapd status | grep -c "Active: active (running)")
-if test 1 -ne "\${hostapd_is_running}" ; then
+if test 1 -ne "\${hostapd_is_running}"; then
     rm -rf /var/run/hostapd/ap0 | echo "ap0 interface does not exist, the faillure is elsewhere"
 fi
 
@@ -336,7 +327,7 @@ if test true != "${STA_ONLY}"; then
     _logger "Populate /bin/rpi-wifi.sh"
     bash -c 'cat > /bin/rpi-wifi.sh' <<EOF
 #!/bin/bash
-echo 'Starting Wifi AP and client...'
+echo 'Starting Wifi AP and STA client...'
 ifdown --force wlan0
 ifdown --force ap0
 ifup ap0
@@ -352,42 +343,6 @@ EOF
     chmod +x /bin/rpi-wifi.sh
 fi
 
-# create ap sta log folder
-mkdir -p /var/log/ap_sta_wifi
-touch /var/log/ap_sta_wifi/ap0_mgnt.log
-touch /var/log/ap_sta_wifi/on_boot.log
-
-if test true != "${STA_ONLY}"; then
-    # Create hostapd ap0 monitor
-    _logger "Create hostapd ap0 monitor crontask"
-    # do not create the same cron task if exist
-    check_ap0_cron_exist=$(EDITOR=nano crontab -l | grep -cF "* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
-    if test 1 != $check_ap0_cron_exist; then
-        # crontab -l | { cat echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" } | crontab -
-        EDITOR=nano crontab -l > cron_jobs
-        echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" >> cron_jobs
-        EDITOR=nano crontab cron_jobs
-        rm cron_jobs
-    else
-        _logger "crontask exists"
-    fi
-fi
-
-if test true != "${STA_ONLY}"; then
-    # Create Reboot cron task
-    _logger "Create AP and Client crontask"
-    # do not create the same cron task if exist
-    reboot_cron_exist=$(EDITOR=nano crontab -l | grep -cF "@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
-    if test 1 != $reboot_cron_exist; then
-        EDITOR=nano crontab -l > cron_jobs
-        echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n" >> cron_jobs
-        EDITOR=nano crontab cron_jobs
-        rm cron_jobs
-    else
-        _logger "crontask exists"
-    fi
-fi
-
 if test true != "${STA_ONLY}"; then
     # unmask and enable dnsmasq.service / hostapd.service
     _logger "Unmask and enable dnsmasq.service / hostapd.service"
@@ -396,19 +351,70 @@ if test true != "${STA_ONLY}"; then
     systemctl daemon-reload
 fi
 
+# create ap sta log folder
+mkdir -p /var/log/ap_sta_wifi
+touch /var/log/ap_sta_wifi/ap0_mgnt.log
+touch /var/log/ap_sta_wifi/on_boot.log
+
+check_crontab_initialized=$(crontab -l | grep -cF "# comment for crontab init")
+if test 1 != $check_crontab_initialized; then
+    # Check if crontab exist for "sudo user"
+    _logger "init crontab first time by adding comment"
+    crontab -l > cron_jobs
+    echo -e "# comment for crontab init\n" >> cron_jobs
+    crontab cron_jobs
+    rm cron_jobs
+else
+    _logger "Crontab already initialized"
+fi
+
+if test true != "${STA_ONLY}"; then
+    # Create hostapd ap0 monitor
+    _logger "Create hostapd ap0 monitor cronjob"
+    # do not create the same cronjob if exist
+    cron_jobs=/tmp/tmp.cron
+    cronjob_1=$(crontab -l | grep -cF "* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
+    if test 1 != $cronjob_1; then
+        # crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | crontab -
+        crontab -l > $cron_jobs
+        echo $cron_jobs
+        echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" >> $cron_jobs
+        echo $cron_jobs
+        crontab < $cron_jobs
+        rm $cron_jobs
+        _logger "Cronjob created"
+    else
+        _logger "Crontjob exist"
+    fi
+fi
+
+if test true != "${STA_ONLY}"; then
+    # Create AP + STA cronjob boot on start
+    _logger "Create AP and STA Client cronjob"
+    # do not create the same cronjob if exist
+    cronjob_2=$(crontab -l | grep -cF "@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
+    if test 1 != $cronjob_2; then
+        # crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | crontab -
+        crontab -l > cron_jobs
+        echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n" >> cron_jobs
+        crontab < cron_jobs
+        rm cron_jobs
+        _logger "Cronjob created"
+    else
+        _logger "Cronjob exist"
+    fi
+fi
+
 # Finish
-if test true == "${STA_ONLY}" && test true != "${AP_ONLY}"; then
+if test true == "${STA_ONLY}"; then
     wpa_cli -i wlan0 reconfigure
     sleep 15
-    # wpa_cli -i wlan0 reassociate
-    # sleep 3
-    # ifdown --force wlan0
     ifconfig wlan0 down # better way for docker
     sleep 2
-    # ifup --force wlan0
     ifconfig wlan0 up # better way for docker
     _logger "STA configuration is finished!"
-elif test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
+elif test true == "${AP_ONLY}"; then
+    /bin/bash /bin/rpi-wifi.sh
     _logger "AP configuration is finished!"
 elif test true != "${STA_ONLY}" && test true != "${AP_ONLY}"; then
     _logger "AP + STA configurations are finished!"
