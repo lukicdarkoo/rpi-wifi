@@ -11,6 +11,8 @@
 
 # set -exv
 
+source $(pwd)/ap_sta_config.sh
+
 check_crontab_initialized=$(crontab -l | grep -cF "# comment for crontab init")
 if test 1 != $check_crontab_initialized; then
     # Check if crontab exist for "sudo user"
