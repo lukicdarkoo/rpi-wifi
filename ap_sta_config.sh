@@ -24,7 +24,7 @@ GREEN='\033[1;32m'
 RED='\033[1;31m'
 
 _welcome() {
-    VERSION="1.5"
+    VERSION="1.6"
     echo -e "${RASPBERRY}\n"
     echo -e "                                                                       "
     echo -e "  /888888  /8888888                         /888888  /88888888 /888888 "
@@ -374,6 +374,5 @@ fi
 
 if test true != "${STA_ONLY}"; then
     sleep(8)
-    # /bin/bash ~/ap_sta_cron.sh
     curl https://raw.githubusercontent.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/master/ap_sta_cron.sh | bash -s --
 fi
