@@ -43,9 +43,7 @@ cronjob_1=$(crontab -l | grep -cF "* * * * * /bin/bash /bin/manage-ap0-iface.sh 
 if test 1 != $cronjob_1; then
     # crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | crontab -
     crontab -l >$cron_jobs
-    echo $cron_jobs
     echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" >>$cron_jobs
-    echo $cron_jobs
     crontab <$cron_jobs
     rm $cron_jobs
     _logger "Cronjob created"
