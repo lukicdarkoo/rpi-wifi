@@ -373,6 +373,6 @@ elif test true != "${STA_ONLY}" && test true != "${AP_ONLY}"; then
 fi
 
 if test true != "${STA_ONLY}"; then
-    sleep(8)
+    sleep 8
     curl https://raw.githubusercontent.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/master/ap_sta_cron.sh | bash -s --
 fi
