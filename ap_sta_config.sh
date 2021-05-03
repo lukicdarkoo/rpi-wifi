@@ -374,5 +374,5 @@ fi
 
 if test true != "${STA_ONLY}"; then
     # chmod +x ./ap_sta_cron.sh
-    /bin/bash ./ap_sta_cron.sh
+    /bin/bash ap_sta_cron.sh
 fi
