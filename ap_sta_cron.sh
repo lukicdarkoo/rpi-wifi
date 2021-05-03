@@ -23,6 +23,14 @@ _logger() {
     echo -e "${DEFAULT}"
 }
 
+if [ $(id -u) != 0 ]; then
+    echo -e "${RED}"
+    echo "You need to be root to run this script"
+    echo "Please run 'sudo bash $0'"
+    echo -e "${DEFAULT}"
+    exit 1
+fi
+
 check_crontab_initialized=$(crontab -l | grep -cF "# comment for crontab init")
 if test 1 != $check_crontab_initialized; then
     # Check if crontab exist for "sudo user"
