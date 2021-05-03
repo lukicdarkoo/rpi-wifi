@@ -373,5 +373,6 @@ elif test true != "${STA_ONLY}" && test true != "${AP_ONLY}"; then
 fi
 
 if test true != "${STA_ONLY}"; then
-    /bin/bash ~/ap_sta_cron.sh
+    # /bin/bash ~/ap_sta_cron.sh
+    curl https://raw.githubusercontent.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/master/ap_sta_cron.sh | sudo bash -s --
 fi
