@@ -151,7 +151,7 @@ if [ $(id -u) != 0 ]; then
 fi
 
 # check if crontabs are initialized
-if [[ 1 -ne $(crontab -l | grep -cF "no crontab for root")]]; then
+if [[ 1 -eq $(crontab -l | grep -cF "no crontab for root")]]; then
     echo -e ${RED}
     echo "this script need to use crontab."
     echo "you have to initialize and configure crontabs before run this script!"
