@@ -145,8 +145,21 @@ set -- "${POSITIONAL[@]}"
 
 if [ $(id -u) != 0 ]; then
     echo -e "${RED}"
-    echo "You need to be root to run this script"
-    echo "Please run 'sudo bash $0'"
+    echo "You need to be root to run this script! Please run 'sudo bash $0'"
+    echo -e "${DEFAULT}"
+    exit 1
+fi
+
+# check if crontabs are initialized
+if [[ 1 -ne $(crontab -l | grep -cF "no crontab for root")]]; then
+    echo -e ${RED}
+    echo "this script need to use crontab."
+    echo "you have to initialize and configure crontabs before run this script!"
+    echo "run 'sudo crontab -e'"
+    echo "select EDITOR nano or whatever"
+    echo "edit crontab by adding '# a comment line' or whatever"
+    echo "save and exit 'ctrl + s' & 'crtl + x'"
+    echo "restart the script 'sudo bash $0'"
     echo -e "${DEFAULT}"
     exit 1
 fi
