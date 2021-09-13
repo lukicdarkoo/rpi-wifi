@@ -20,8 +20,7 @@
     },
     "license": "MIT",
     "author": "Mickael Lehoux",
-    "contributors": [
-    ],
+    "contributors": [],
     "repository": {
         "type": "git",
         "url": "https://github.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP"
