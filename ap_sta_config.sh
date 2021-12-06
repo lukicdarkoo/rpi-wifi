@@ -373,9 +373,9 @@ touch /var/log/ap_sta_wifi/on_boot.log
 if test true == "${STA_ONLY}"; then
     /usr/sbin/wpa_cli -i wlan0 reconfigure
     /usr/bin/sleep 15
-    ifconfig wlan0 down --force # better way for docker
+    /usr/sbin/ifconfig wlan0 down --force # better way for docker
     /usr/bin/sleep 2
-    ifconfig wlan0 up --force # better way for docker
+    /usr/sbin/ifconfig wlan0 up --force # better way for docker
     _logger "STA configuration is finished!"
 elif test true == "${AP_ONLY}"; then
     /bin/bash /bin/rpi-wifi.sh
