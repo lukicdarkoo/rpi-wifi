@@ -341,16 +341,16 @@ if test true != "${STA_ONLY}"; then
     bash -c 'cat > /bin/rpi-wifi.sh' <<EOF
 #!/bin/bash
 echo 'Starting Wifi AP and STA client...'
-ifdown --force wlan0
-ifdown --force ap0
-ifup ap0
-ifup wlan0
-$([ "${NO_INTERNET-}" != "true" ] && echo "sysctl -w net.ipv4.ip_forward=1")
-$([ "${NO_INTERNET-}" != "true" ] && echo "iptables -t nat -A POSTROUTING -s ${AP_IP_BEGIN}.0/24 ! -d ${AP_IP_BEGIN}.0/24 -j MASQUERADE")
-$([ "${NO_INTERNET-}" != "true" ] && echo "systemctl restart dnsmasq")
+/usr/sbin/ifdown --force wlan0
+/usr/sbin/ifdown --force ap0
+/usr/sbin/ifup ap0
+/usr/sbin/ifup wlan0
+$([ "${NO_INTERNET-}" != "true" ] && echo "/usr/sbin/sysctl -w net.ipv4.ip_forward=1")
+$([ "${NO_INTERNET-}" != "true" ] && echo "/usr/sbin/iptables -t nat -A POSTROUTING -s ${AP_IP_BEGIN}.0/24 ! -d ${AP_IP_BEGIN}.0/24 -j MASQUERADE")
+$([ "${NO_INTERNET-}" != "true" ] && echo "/usr/bin/systemctl restart dnsmasq")
 echo 'WPA Supplicant reconfigure in 5sec...'
-sleep 5
-wpa_cli -i wlan0 reconfigure
+/usr/bin/sleep 5
+/usr/sbin/wpa_cli -i wlan0 reconfigure
 
 EOF
     chmod +x /bin/rpi-wifi.sh
@@ -359,9 +359,9 @@ fi
 if test true != "${STA_ONLY}"; then
     # unmask and enable dnsmasq.service / hostapd.service
     _logger "Unmask and enable dnsmasq.service / hostapd.service"
-    systemctl unmask dnsmasq.service hostapd.service
-    systemctl enable dnsmasq.service hostapd.service
-    systemctl daemon-reload
+    /usr/bin/systemctl unmask dnsmasq.service hostapd.service
+    /usr/bin/systemctl enable dnsmasq.service hostapd.service
+    /usr/bin/systemctl daemon-reload
 fi
 
 # create ap sta log folder
@@ -371,10 +371,10 @@ touch /var/log/ap_sta_wifi/on_boot.log
 
 # Finish
 if test true == "${STA_ONLY}"; then
-    wpa_cli -i wlan0 reconfigure
-    sleep 15
+    /usr/sbin/wpa_cli -i wlan0 reconfigure
+    /usr/bin/sleep 15
     ifconfig wlan0 down --force # better way for docker
-    sleep 2
+    /usr/bin/sleep 2
     ifconfig wlan0 up --force # better way for docker
     _logger "STA configuration is finished!"
 elif test true == "${AP_ONLY}"; then
@@ -387,6 +387,6 @@ fi
 
 if test true != "${STA_ONLY}"; then
     _logger "Wait during wlan0 reconnecting to internet..."
-    sleep 15
+    /usr/bin/sleep 15
     curl https://raw.githubusercontent.com/MkLHX/AP_STA_RPI_SAME_WIFI_CHIP/master/ap_sta_cron.sh | bash -s --
 fi
