@@ -32,7 +32,7 @@ if [ $(id -u) != 0 ]; then
 fi
 
 # check if crontabs are initialized
-if [[ 1 -eq $(crontab -l | grep -cF "no crontab for root") ]]; then
+if [[ 1 -eq $(/usr/bin/crontab -l | grep -cF "no crontab for root") ]]; then
     echo -e ${RED}
     echo "this script need to use crontab."
     echo "you have to initialize and configure crontabs before run this script!"
@@ -45,13 +45,13 @@ if [[ 1 -eq $(crontab -l | grep -cF "no crontab for root") ]]; then
     exit 1
 fi
 
-check_crontab_initialized=$(crontab -l | grep -cF "# comment for crontab init")
+check_crontab_initialized=$(/usr/bin/crontab -l | grep -cF "# comment for crontab init")
 if test 1 != $check_crontab_initialized; then
     # Check if crontab exist for "sudo user"
     _logger "init crontab first time by adding comment"
-    crontab -l >cron_jobs
+    /usr/bin/crontab -l >cron_jobs
     echo -e "# comment for crontab init\n" >>cron_jobs
-    crontab cron_jobs
+    /usr/bin/crontab cron_jobs
     rm cron_jobs
 else
     _logger "Crontab already initialized"
@@ -61,12 +61,12 @@ fi
 _logger "Create hostapd ap0 monitor cronjob"
 # do not create the same cronjob if exist
 cron_jobs=/tmp/tmp.cron
-cronjob_1=$(crontab -l | grep -cF "* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
+cronjob_1=$(/usr/bin/crontab -l | grep -cF "* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1")
 if test 1 != $cronjob_1; then
     # crontab -l | { cat; echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n"; } | crontab -
-    crontab -l >$cron_jobs
+    /usr/bin/crontab -l >$cron_jobs
     echo -e "# Start hostapd when ap0 already exists\n* * * * * /bin/bash /bin/manage-ap0-iface.sh >> /var/log/ap_sta_wifi/ap0_mgnt.log 2>&1\n" >>$cron_jobs
-    crontab <$cron_jobs
+    /usr/bin/crontab <$cron_jobs
     rm $cron_jobs
     _logger "Cronjob created"
 else
@@ -75,12 +75,12 @@ fi
 # Create AP + STA cronjob boot on start
 _logger "Create AP and STA Client cronjob"
 # do not create the same cronjob if exist
-cronjob_2=$(crontab -l | grep -cF "@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
+cronjob_2=$(/usr/bin/crontab -l | grep -cF "@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
 if test 1 != $cronjob_2; then
     # crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | crontab -
-    crontab -l >cron_jobs
+    /usr/bin/crontab -l >cron_jobs
     echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n" >>cron_jobs
-    crontab <cron_jobs
+    /usr/bin/crontab <cron_jobs
     rm cron_jobs
     _logger "Cronjob created"
 else
