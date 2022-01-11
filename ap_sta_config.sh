@@ -182,6 +182,7 @@ fi
 
 # welcome cli user
 _welcome
+_logger "started `date +%Y/%m/%d-%T`"
 
 if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     # Install dependencies
