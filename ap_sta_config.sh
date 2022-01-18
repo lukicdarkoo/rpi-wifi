@@ -24,7 +24,7 @@ GREEN='\033[1;32m'
 RED='\033[1;31m'
 
 _welcome() {
-    VERSION="1.7.2"
+    VERSION="1.7.3"
     echo -e "${RASPBERRY}\n"
     echo -e "                                                                       "
     echo -e "  /888888  /8888888                         /888888  /88888888 /888888 "
@@ -351,7 +351,7 @@ $([ "${NO_INTERNET-}" != "true" ] && echo "/usr/sbin/iptables -t nat -A POSTROUT
 $([ "${NO_INTERNET-}" != "true" ] && echo "/usr/bin/systemctl restart dnsmasq")
 echo 'WPA Supplicant reconfigure in 5sec...'
 /usr/bin/sleep 5
-/usr/sbin/wpa_cli -i wlan0 reconfigure
+wpa_cli -i wlan0 reconfigure
 
 EOF
     chmod +x /bin/rpi-wifi.sh
@@ -372,7 +372,7 @@ touch /var/log/ap_sta_wifi/on_boot.log
 
 # Finish
 if test true == "${STA_ONLY}"; then
-    /usr/sbin/wpa_cli -i wlan0 reconfigure
+    wpa_cli -i wlan0 reconfigure
     /usr/bin/sleep 15
     /usr/sbin/ifconfig wlan0 down --force # better way for docker
     /usr/bin/sleep 2
