@@ -78,10 +78,10 @@ _logger "Create AP and STA Client cronjob"
 cronjob_2=$(/usr/bin/crontab -l | grep -cF "@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1")
 if test 1 != $cronjob_2; then
     # crontab -l | { cat; echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n"; } | crontab -
-    /usr/bin/crontab -l >cron_jobs
-    echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n" >>cron_jobs
-    /usr/bin/crontab <cron_jobs
-    rm cron_jobs
+    /usr/bin/crontab -l >$cron_jobs
+    echo -e "# On boot start AP + STA config\n@reboot sleep 20 && /bin/bash /bin/rpi-wifi.sh >> /var/log/ap_sta_wifi/on_boot.log 2>&1\n" >>$cron_jobs
+    /usr/bin/crontab <$cron_jobs
+    rm $cron_jobs
     _logger "Cronjob created"
 else
     _logger "Cronjob exist"
