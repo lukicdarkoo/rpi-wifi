@@ -90,7 +90,7 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.2.1.tgz"
 
-ansi-styles@^4.0.0:
+ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   version "4.3.0"
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-4.3.0.tgz"
   dependencies:
@@ -227,9 +227,11 @@ async-settle@^1.0.0:
   dependencies:
     async-done "^1.2.2"
 
-async@1.5.2:
-  version "1.5.2"
-  resolved "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
+async@^2.6.0:
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.6.4.tgz#706b7ff6084664cd7eae713f6f965433b5504221"
+  dependencies:
+    lodash "^4.17.14"
 
 atob@^2.1.2:
   version "2.1.2"
@@ -336,32 +338,34 @@ braces@^3.0.2, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-browser-sync-client@^2.27.9:
-  version "2.27.9"
-  resolved "https://registry.npmjs.org/browser-sync-client/-/browser-sync-client-2.27.9.tgz"
+browser-sync-client@^2.28.1:
+  version "2.28.1"
+  resolved "https://registry.yarnpkg.com/browser-sync-client/-/browser-sync-client-2.28.1.tgz#cc36829e2958e39a1b3383483212781047786ec3"
   dependencies:
     etag "1.8.1"
     fresh "0.5.2"
     mitt "^1.1.3"
     rxjs "^5.5.6"
+    typescript "^4.6.2"
 
-browser-sync-ui@^2.27.9:
-  version "2.27.9"
-  resolved "https://registry.npmjs.org/browser-sync-ui/-/browser-sync-ui-2.27.9.tgz"
+browser-sync-ui@^2.28.1:
+  version "2.28.1"
+  resolved "https://registry.yarnpkg.com/browser-sync-ui/-/browser-sync-ui-2.28.1.tgz#53d8b99621d674541be74c475cdc41144690ad43"
   dependencies:
     async-each-series "0.1.1"
+    chalk "4.1.2"
     connect-history-api-fallback "^1"
     immutable "^3"
     server-destroy "1.0.1"
     socket.io-client "^4.4.1"
     stream-throttle "^0.1.3"
 
-browser-sync@^2.27.9:
-  version "2.27.9"
-  resolved "https://registry.npmjs.org/browser-sync/-/browser-sync-2.27.9.tgz"
+browser-sync@^2.28.1:
+  version "2.28.1"
+  resolved "https://registry.yarnpkg.com/browser-sync/-/browser-sync-2.28.1.tgz#0895b0e819507fb0602d2542098003c28808a41b"
   dependencies:
-    browser-sync-client "^2.27.9"
-    browser-sync-ui "^2.27.9"
+    browser-sync-client "^2.28.1"
+    browser-sync-ui "^2.28.1"
     bs-recipes "1.3.4"
     bs-snippet-injector "^2.0.1"
     chokidar "^3.5.1"
@@ -369,7 +373,7 @@ browser-sync@^2.27.9:
     connect-history-api-fallback "^1"
     dev-ip "^1.0.1"
     easy-extender "^2.3.4"
-    eazy-logger "3.1.0"
+    eazy-logger "4.0.0"
     etag "^1.8.1"
     fresh "^0.5.2"
     fs-extra "3.0.1"
@@ -378,8 +382,8 @@ browser-sync@^2.27.9:
     localtunnel "^2.0.1"
     micromatch "^4.0.2"
     opn "5.3.0"
-    portscanner "2.1.1"
-    qs "6.2.3"
+    portscanner "2.2.0"
+    qs "^6.11.0"
     raw-body "^2.3.2"
     resp-modifier "6.0.2"
     rx "4.1.0"
@@ -388,7 +392,7 @@ browser-sync@^2.27.9:
     serve-static "1.13.2"
     server-destroy "1.0.1"
     socket.io "^4.4.1"
-    ua-parser-js "1.0.2"
+    ua-parser-js "^1.0.33"
     yargs "^17.3.1"
 
 browserslist@^4.21.4:
@@ -448,6 +452,13 @@ camelcase@^3.0.0:
 caniuse-lite@^1.0.30001400, caniuse-lite@^1.0.30001426:
   version "1.0.30001436"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001436.tgz#22d7cbdbbbb60cdc4ca1030ccd6dea9f5de4848b"
+
+chalk@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
+  dependencies:
+    ansi-styles "^4.1.0"
+    supports-color "^7.1.0"
 
 chalk@^1.1.3:
   version "1.1.3"
@@ -759,10 +770,6 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-dlv@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.npmjs.org/dlv/-/dlv-1.1.3.tgz"
-
 duplexify@^3.6.0:
   version "3.7.1"
   resolved "https://registry.npmjs.org/duplexify/-/duplexify-3.7.1.tgz"
@@ -785,11 +792,9 @@ easy-extender@^2.3.4:
   dependencies:
     lodash "^4.17.10"
 
-eazy-logger@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/eazy-logger/-/eazy-logger-3.1.0.tgz"
-  dependencies:
-    tfunk "^4.0.0"
+eazy-logger@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/eazy-logger/-/eazy-logger-4.0.0.tgz#49bc51fc432ec2a5dd6ed068c72e067825ce12db"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -1335,6 +1340,10 @@ has-ansi@^2.0.0:
   dependencies:
     ansi-regex "^2.0.0"
 
+has-flag@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
+
 has-property-descriptors@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/has-property-descriptors/-/has-property-descriptors-1.0.0.tgz"
@@ -1785,7 +1794,7 @@ lodash.templatesettings@^4.0.0:
   dependencies:
     lodash._reinterpolate "^3.0.0"
 
-lodash@^4.17.10:
+lodash@^4.17.10, lodash@^4.17.14:
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
 
@@ -1974,6 +1983,10 @@ object-copy@^0.1.0:
     copy-descriptor "^0.1.0"
     define-property "^0.2.5"
     kind-of "^3.0.3"
+
+object-inspect@^1.9.0:
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.12.3.tgz#ba62dffd67ee256c8c086dfae69e016cd1f198b9"
 
 object-keys@^1.1.1:
   version "1.1.1"
@@ -2174,11 +2187,11 @@ plugin-error@^0.1.2:
     arr-union "^2.0.1"
     extend-shallow "^1.1.2"
 
-portscanner@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.npmjs.org/portscanner/-/portscanner-2.1.1.tgz"
+portscanner@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/portscanner/-/portscanner-2.2.0.tgz#6059189b3efa0965c9d96a56b958eb9508411cf1"
   dependencies:
-    async "1.5.2"
+    async "^2.6.0"
     is-number-like "^1.0.3"
 
 posix-character-classes@^0.1.0:
@@ -2220,9 +2233,11 @@ pumpify@^1.3.5:
     inherits "^2.0.3"
     pump "^2.0.0"
 
-qs@6.2.3:
-  version "6.2.3"
-  resolved "https://registry.npmjs.org/qs/-/qs-6.2.3.tgz"
+qs@^6.11.0:
+  version "6.11.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.0.tgz#fd0d963446f7a65e1367e01abd85429453f0c37a"
+  dependencies:
+    side-channel "^1.0.4"
 
 queue-microtask@^1.2.2:
   version "1.2.3"
@@ -2512,6 +2527,14 @@ setprototypeof@1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.2.0.tgz"
 
+side-channel@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/side-channel/-/side-channel-1.0.4.tgz#efce5c8fdc104ee751b25c58d4290011fa5ea2cf"
+  dependencies:
+    call-bind "^1.0.0"
+    get-intrinsic "^1.0.2"
+    object-inspect "^1.9.0"
+
 slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/slash/-/slash-3.0.0.tgz"
@@ -2728,6 +2751,12 @@ supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/supports-color/-/supports-color-2.0.0.tgz"
 
+supports-color@^7.1.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-7.2.0.tgz#1b7dcdcb32b8138801b3e478ba6a51caa89648da"
+  dependencies:
+    has-flag "^4.0.0"
+
 supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
@@ -2742,13 +2771,6 @@ sver-compat@^1.5.0:
 symbol-observable@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.0.1.tgz"
-
-tfunk@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/tfunk/-/tfunk-4.0.0.tgz"
-  dependencies:
-    chalk "^1.1.3"
-    dlv "^1.1.3"
 
 through2-filter@^3.0.0:
   version "3.0.0"
@@ -2837,9 +2859,13 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
 
-ua-parser-js@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-1.0.2.tgz"
+typescript@^4.6.2:
+  version "4.9.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
+
+ua-parser-js@^1.0.33:
+  version "1.0.33"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.33.tgz#f21f01233e90e7ed0f059ceab46eb190ff17f8f4"
 
 unc-path-regex@^0.1.2:
   version "0.1.2"
