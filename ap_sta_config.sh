@@ -182,7 +182,7 @@ fi
 
 # welcome cli user
 _welcome
-_logger "started `date +%Y/%m/%d-%T`"
+_logger "started $(date +%Y/%m/%d-%T)"
 
 if test true != "${STA_ONLY}" && test true == "${AP_ONLY}"; then
     # Install dependencies
@@ -344,8 +344,8 @@ if test true != "${STA_ONLY}"; then
 echo 'Starting Wifi AP and STA client...'
 /usr/sbin/ifdown --force wlan0
 /usr/sbin/ifdown --force ap0
-/usr/sbin/ifup ap0
-/usr/sbin/ifup wlan0
+/usr/sbin/ifup --force ap0
+/usr/sbin/ifup --force wlan0
 $([ "${NO_INTERNET-}" != "true" ] && echo "/usr/sbin/sysctl -w net.ipv4.ip_forward=1")
 $([ "${NO_INTERNET-}" != "true" ] && echo "/usr/sbin/iptables -t nat -A POSTROUTING -s ${AP_IP_BEGIN}.0/24 ! -d ${AP_IP_BEGIN}.0/24 -j MASQUERADE")
 $([ "${NO_INTERNET-}" != "true" ] && echo "/usr/bin/systemctl restart dnsmasq")
@@ -373,10 +373,6 @@ touch /var/log/ap_sta_wifi/on_boot.log
 # Finish
 if test true == "${STA_ONLY}"; then
     wpa_cli -i wlan0 reconfigure
-    /usr/bin/sleep 15
-    /usr/sbin/ifconfig wlan0 down --force # better way for docker
-    /usr/bin/sleep 2
-    /usr/sbin/ifconfig wlan0 up --force # better way for docker
     _logger "STA configuration is finished!"
 elif test true == "${AP_ONLY}"; then
     /bin/bash /bin/rpi-wifi.sh
