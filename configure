@@ -80,7 +80,7 @@ MAC_ADDRESS="$(cat /sys/class/net/wlan0/address)"
 # Install dependencies
 sudo apt -y update
 sudo apt -y upgrade
-sudo apt -y install dnsmasq dhcpcd hostapd cron
+sudo apt -y install dnsmasq dhcpcd hostapd cron iptables
 systemctl unmask hostapd
 systemctl enable hostapd
 
