@@ -104,6 +104,8 @@ domain-needed
 bogus-priv
 dhcp-range=${AP_IP_BEGIN}.50,${AP_IP_BEGIN}.150,12h
 dhcp-option=3,${AP_IP}
+
+address=/soundbox.lan/${AP_IP}
 EOF
 
 # Populate `/etc/hostapd/hostapd.conf`
