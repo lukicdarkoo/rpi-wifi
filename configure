@@ -138,10 +138,10 @@ Type=forking
 PIDFile=/run/hostapd.pid
 Restart=on-failure
 RestartSec=2
-Environment=DAEMON_CONF=/etc/hostapd/hostapd.conf
+#Environment=DAEMON_CONF=/etc/hostapd/hostapd.conf
 EnvironmentFile=-/etc/default/hostapd
 ExecStartPre=/sbin/iw dev %i interface add ap@%i type __ap
-ExecStart=/usr/sbin/hostapd -i ap@%i -P /run/hostapd.pid -B $DAEMON_OPTS ${DAEMON_CONF}
+ExecStart=/usr/sbin/hostapd -i ap@%i -P /run/hostapd.pid -B /etc/hostapd/hostapd.conf
 ExecStopPost=-/sbin/iw dev ap@%i del
 
 [Install]
